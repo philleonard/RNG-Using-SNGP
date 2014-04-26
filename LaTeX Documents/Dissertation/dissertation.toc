@@ -1,0 +1,39 @@
+\contentsline {section}{\numberline {1}Abstract}{3}
+\contentsline {section}{\numberline {2}Introduction}{4}
+\contentsline {section}{\numberline {3}Background}{5}
+\contentsline {section}{\numberline {4}Design}{6}
+\contentsline {subsection}{\numberline {4.1}GP Approach}{6}
+\contentsline {subsection}{\numberline {4.2}SNGP Approach}{10}
+\contentsline {section}{\numberline {5}Implementation}{13}
+\contentsline {subsection}{\numberline {5.1}GP Implementation}{13}
+\contentsline {subsubsection}{\numberline {5.1.1}Main Data Structures}{13}
+\contentsline {subsubsection}{\numberline {5.1.2}Generating Initial Population}{13}
+\contentsline {subsubsection}{\numberline {5.1.3}Evaluating Trees}{14}
+\contentsline {subsubsection}{\numberline {5.1.4}Fitness Function}{15}
+\contentsline {subsubsection}{\numberline {5.1.5}Evolution}{16}
+\contentsline {subsubsection}{\numberline {5.1.6}Conclusion}{17}
+\contentsline {subsection}{\numberline {5.2}SNGP Implementation}{18}
+\contentsline {subsubsection}{\numberline {5.2.1}Main Data Structures}{18}
+\contentsline {subsubsection}{\numberline {5.2.2}Generating Initial Population \& Evaluation}{19}
+\contentsline {subsubsection}{\numberline {5.2.3}Successor Mutation / Evolution}{19}
+\contentsline {subsubsection}{\numberline {5.2.4}Other Methods and Conclusion}{20}
+\contentsline {subsection}{\numberline {5.3}C $rand()$ and TRNG Test Program Implementation}{21}
+\contentsline {subsubsection}{\numberline {5.3.1}C $rand()$}{21}
+\contentsline {subsubsection}{\numberline {5.3.2}Random.org TRNG}{22}
+\contentsline {subsection}{\numberline {5.4}Conclusion}{23}
+\contentsline {section}{\numberline {6}Evaluation}{24}
+\contentsline {subsection}{\numberline {6.1}Introduction}{24}
+\contentsline {subsection}{\numberline {6.2}Evaluation of GP Implementation}{24}
+\contentsline {subsection}{\numberline {6.3}50 Standard Runs: GP vs SNGP Implementation}{25}
+\contentsline {subsubsection}{\numberline {6.3.1}Single Run Example}{25}
+\contentsline {subsubsection}{\numberline {6.3.2}50 Runs: Standard Parameters}{27}
+\contentsline {subsubsection}{\numberline {6.3.3}Fittest RNG Found}{28}
+\contentsline {subsubsection}{\numberline {6.3.4}GP vs SNGP Conclusion}{30}
+\contentsline {subsection}{\numberline {6.4}Parameter Altering Experimentation: Reducing Population Sizes}{31}
+\contentsline {subsection}{\numberline {6.5}Genetic vs Conventional RNGs}{32}
+\contentsline {subsection}{\numberline {6.6}Real Implementation}{34}
+\contentsline {section}{\numberline {7}Discussion}{37}
+\contentsline {section}{\numberline {8}Learning Points}{37}
+\contentsline {section}{\numberline {9}Professional Issues}{38}
+\contentsline {section}{\numberline {10}Bibliography}{39}
+\contentsline {section}{\numberline {11}Appendices}{40}

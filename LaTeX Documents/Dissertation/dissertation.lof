@@ -1,0 +1,26 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces RNG binary tree\relax }}{6}
+\contentsline {figure}{\numberline {2}{\ignorespaces GP flowchart\relax }}{8}
+\contentsline {figure}{\numberline {3}{\ignorespaces SNGP flowchart\relax }}{11}
+\contentsline {figure}{\numberline {4}{\ignorespaces GP Screen Shot\relax }}{18}
+\contentsline {figure}{\numberline {5}{\ignorespaces SNGP Screen Shot\relax }}{21}
+\contentsline {figure}{\numberline {6}{\ignorespaces C $rand()$ Screen Shot\relax }}{22}
+\contentsline {figure}{\numberline {7}{\ignorespaces TRNG Screen Shot\relax }}{23}
+\contentsline {figure}{\numberline {8}{\ignorespaces Sample GP vs SNGP Run\relax }}{26}
+\contentsline {figure}{\numberline {9}{\ignorespaces Scalar Entropies SNGP\relax }}{26}
+\contentsline {figure}{\numberline {10}{\ignorespaces Scalar Entropies GP\relax }}{26}
+\contentsline {figure}{\numberline {11}{\ignorespaces GP surface plot\relax }}{28}
+\contentsline {figure}{\numberline {12}{\ignorespaces SNGP surface plot\relax }}{28}
+\contentsline {figure}{\numberline {13}{\ignorespaces Fittest RNG Tree - 27.995729 Bits of Entropy\relax }}{29}
+\contentsline {figure}{\numberline {14}{\ignorespaces Simplified RNG Tree\relax }}{30}
+\contentsline {figure}{\numberline {15}{\ignorespaces Reduced Pop size of SNGP\relax }}{31}
+\contentsline {figure}{\numberline {16}{\ignorespaces Reduced Pop size of GP\relax }}{31}
+\contentsline {figure}{\numberline {17}{\ignorespaces Avg SNGP Run Time with Reduced Pop\relax }}{31}
+\contentsline {figure}{\numberline {18}{\ignorespaces Avg GP Run Time with Reduced Pop\relax }}{31}
+\contentsline {figure}{\numberline {19}{\ignorespaces C $rand()$ Image\relax }}{33}
+\contentsline {figure}{\numberline {20}{\ignorespaces Random.org Image\relax }}{33}
+\contentsline {figure}{\numberline {21}{\ignorespaces Genetic Image\relax }}{33}
+\contentsline {figure}{\numberline {22}{\ignorespaces Random.org Entropy Shortfall\relax }}{34}
+\contentsline {figure}{\numberline {23}{\ignorespaces SNGP Entropy Shortfall of Solutions\relax }}{34}
+\contentsline {figure}{\numberline {24}{\ignorespaces GP Entropy Shortfall of Solutions\relax }}{34}
+\contentsline {figure}{\numberline {25}{\ignorespaces Logarithmic (base 10) Scale Run time of $n$ calls of $rand(J) = {{(2 - ( 2 - J))} \over {J \penalty \z@ \mkern 12mu{\mathgroup \symoperators mod}\tmspace +\thinmuskip {.1667em}\tmspace +\thinmuskip {.1667em}(2 - \left ({J \over 6}\right ))}}$ and C $rand()$, on the fixed min value of 0 and max value of 2000 for all runs\relax }}{36}
+\contentsline {figure}{\numberline {26}{\ignorespaces Effect of increasing max value of random number on run time, 1000 calls for each max value. Logarithmic (base 10) Scale Run time of $rand(J) = {{(2 - ( 2 - J))} \over {J \penalty \z@ \mkern 12mu{\mathgroup \symoperators mod}\tmspace +\thinmuskip {.1667em}\tmspace +\thinmuskip {.1667em}(2 - \left ({J \over 6}\right ))}}$ and C $rand()$\relax }}{36}

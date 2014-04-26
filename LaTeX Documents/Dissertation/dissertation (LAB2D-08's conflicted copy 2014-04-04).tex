@@ -1,0 +1,310 @@
+\documentclass[a4paper,10.5pt]{article}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage{tikz-qtree}
+\usepackage[utf8x]{inputenc}
+\usepackage[font=small,format=plain,labelfont=bf,up,textfont=normal,up]{caption}
+\usepackage[left=2.2cm,top=2cm,right=2.2cm,bottom=2cm,nohead,nofoot]{geometry}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\setlength{\footskip}{25pt}
+\usepackage{tikz}
+\usepackage{amsmath,tikz}
+\usetikzlibrary{shapes.geometric}
+\usepackage{subcaption}
+\usepackage{pgfplots}
+\usepackage{filecontents}
+\usepackage{algpseudocode}
+\usepackage{algorithm}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{marginnote}
+\usepackage{pgfgantt}
+\usepackage{pdflscape}
+\usepackage{wrapfig}
+\usepackage{tikz}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{pgfplots}
+\usepackage{filecontents}
+\pgfdeclarelayer{background}
+\usetikzlibrary{matrix}
+\usetikzlibrary{shapes,arrows}
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  \hrule width \textwidth height 0.5pt
+  \kern 2pt
+}
+\tikzstyle{decision} = [diamond, draw, fill=white!20, 
+    text width=6em, text badly centered, node distance=3cm, inner sep=1pt]
+\tikzstyle{block} = [rectangle, draw, fill=white!20, 
+    text width=5em, text centered, rounded corners, minimum height=3em]
+\tikzstyle{line} = [draw, -latex']
+\tikzset{
+  treenode/.style = {align=center, inner sep=0pt, text centered,
+    font=\sffamily},
+ arn_n/.style = {treenode, circle, white,  font=\sffamily, draw=black,
+    fill=black, text width=1.5em}
+}
+\usepackage{marginnote}
+\usepackage{pgfgantt}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\usepackage{float}
+\title{Random Number Generation using Genetic Programming\\ Report}
+\author{Philip Leonard}
+
+\tikzset{
+    maxfitnessorgen /.style={
+        /pgfplots/execute at end plot visualization={\draw [current plot style, dashed] (@auxnode.center) -- ($(@auxnode.center)!10cm!(@auxnode.east)$);}
+    },
+    maxfitnessorgen nodestyle/.style={
+        pos=1, inner sep=0pt, sloped, alias=@auxnode
+    }
+}
+\definecolor{lblue}{HTML}{33B5E5}
+\definecolor{lgrey}{HTML}{7F8C8D}
+\definecolor{lpurple}{HTML}{AA66CC}
+\definecolor{lgreen}{HTML}{99CC00}
+\definecolor{lorange}{HTML}{FFBB33}
+\definecolor{lred}{HTML}{FF4444}
+\definecolor{dblue}{HTML}{0099CC}
+\definecolor{dpurple}{HTML}{9933CC}
+\definecolor{dgreen}{HTML}{669900}
+\definecolor{dorange}{HTML}{FF8800}
+\definecolor{ded}{HTML}{CC0000}
+
+\pgfplotscreateplotcyclelist{androidstyle}{
+{dblue},
+{lred},
+{lorange},
+{lgreen},
+{lpurple},
+{dorange},
+{lgrey},
+}
+
+\pgfplotscreateplotcyclelist{androidstyle2}{
+{lblue},
+{lred},
+}
+
+\begin{filecontents}{sngpreduced.dat}
+a b
+10 0
+20 60
+40 60
+60 70
+80 80
+100 80
+\end{filecontents}
+
+\begin{filecontents}{gpreduced.dat}
+a b
+50 0
+100 40
+200 40
+300 20
+400 40
+500 40
+\end{filecontents}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This is the final report for the project; `Random Number Generation using Genetic Programming' by Philip Leonard, supervised by Dr David Jackson (primary supervisor) and Professor Paul Dunne (secondary supervisor). This document covers all aspects of the project from the introduction and background, to the design implementation and analysis of the project in order to give the reader an understanding of how I implemented the project and what things I found when evaluating the project.
+
+This report demonstrates that using methods described by Koza in \cite{kozarng}, it is possible to genetically breed Random Number Generators that produce sequences of pseudo random bits with near maximal entropy. This report more importantly shows that it is possible to produce better results using the Single Node Genetic Programming methodology described by Jackson in \cite{jacksonsngp}. As well as this, this report also demonstrates that the Random Number Generators Produced genetically by these methods also produce sequences of random bits with higher entropy than other widely used RNGs. It not only outperforms the C programming Linear Congruent Generator algorithm implemented in the $rand()$ function, but can also perform better than a ``True" Random Number Generator that creates random bit sequences from observed atmospheric noise.\newline
+
+
+\noindent \textbf{Keywords:} Genetic Algorithm (GA), Genetic Programming/Program (GP), Pseudo Random Number Generator (PRNG), Random Number Generator (RNG), True Random Number Generator (TRNG), Entropy, Single Node Genetic Programming/Program (SNGP), Crossover, Mutation, Fitness proportionate reproduction (FPR), Linear Congruent Generator (LCG).
+\end{abstract}
+
+\newpage
+
+\tableofcontents
+\newpage
+\section{Introduction}
+Random Number Generators have many computational, scientific and societal applications. They are essential in; gambling, lottery draws, cryptography, statistical sampling, Monte Carlo simulations and other applicaitons where and unpredicatble result is desired. Randomness can be interpreted in more than one way and has no strict mathematical definition. There are a series of tests that can be run on a set of data in order to evaluate some conception of randomness. These include the gap test, frequency test, runs test and information entropy test, and whilst there isn't a way to prove randomness, these tests are a good way of analysing randomness in the eyes of the user and for their practical application. In this project, randomness is tested using the shannon entropy equation \cite[p.2]{kozarng}, which is a measure of the unpredictability/uncertainty in a random variable.
+
+The Genetic Programming paradigm is an evolutionary method of solving problems, where the implementer can define a task where solutions can be randomly generated and tested by some fitness function. The population can then be evolved based on their fitness in order to search through the problem space to find solutions which meet the fitness requirements of the implementer.
+
+Evolving Random Number Generators is therefore an applicable problem instance for Genetic Programming.  The aim of the project is to assess two Genetic Programming methodologies in order to determine which is best suited for genetically breeding RNGs. The method described by Koza in \cite{koza} was followed in order to implement the idea of evolving a random number generator in the widely known traditional Genetic Programming methodology. The next step was to implement the same idea using the Single Node Genetic Programming Methodology described by Jackson in \cite{jacksonsngp}. The effecitvness of both where then compared by gathering data from both implementations and conducting some cross examinaton to determine the victor. In order to determine the effectiveness of the Random Number Generators as a real world solution, entropy data was gathered from pre existing and widely known and used RNGs. These were namely the C rand function, which is a Pseudo Random Number Generator which is makes use of a Linear Congruent Generator algorithm in order to produce random numbers, and a ``True" Random Number Generator was also evaluated in order to compare the effectivness of the genetically produced RNGs against a non-deterministic source of random data. 
+
+\textbf{What are the challenges of the project?}
+
+
+In terms of software three programs have been produced. The GP implementation and the SNGP implementation form two seperate single threaded command line programs. The command line interface displays information and run progress to the user, and all data for each generation and each run, including entropy values and is written to log files. 
+The third program developed is to test both the C random number generator and the TRNG and to write the entropy data to log files as well.
+
+From these implementations I was then able to start to collect data. In order to gather suffiecient data for analysis, I ran both the SNGP and GP implementations 50 times and also ran 50 tests of the C rand funtion and the TRNG. 
+
+The results of project are very promising. To begin with, SNGP proves a much faster way of evolving RNGs, finding solutions on average over 6 times quicker than the standard GP methodology. Not only is it quicker, but it also has a solution rate twice that of the Genetic Programming Methodology. On average the sizes and fitness of solutions were similar for both approaches. The solutions produced by the two genetic methodologies also outperformed the C rand funciton and even the ``True" Random Number Generator. 
+\section{Background}
+- Introduce Koza's paper to explain the GP implementation. \\
+- Introduce Jacksons paper.\\
+- Talk comparitively about the GP implementation to Koza's.\\
+- Koza's and Jackson's papers used mainly for research into the implementations. Talk about using the GP and GA books for prior reading. Talk about adding the TRNG adn C Rand analysis as extra tests.\\
+- Project Requirements from Spec sheet.
+
+\section{Design}
+Design Document
+
+\section{Implementation / Realisation}
+- GP implementation, go through algroithms to code.\\
+- SNGP implementation, go through algorithms to code.\\
+- C rand() and TRNG test implementation. 
+- Describe changes; KMP matching algorithm, SNGP update list order realisation, added run data collection, integer to long for calculations, change of driving evolution in SNGP, terminating on smut to attempted smut. 
+- Problems encountered, SNGP producing incorrect e ntropy values for some trees, 
+
+\section{Evaluation}
+
+- Introduce how evaluation is based on collecting data from running all implemenations and then comparing the results. Any part where running time factors into the analysis then AMD Athlon X2 5600+ 2.8GHz Dual core processor used. Explain changes to the test criteria from design document.\\
+- Introduce evaluation by comparing first GP resulst to that of Kozas results. Compare any criteria that Koza proposes in his paper. Then show results and findings.\\
+- Then introduce comparisons between GP and SNGP implementations under standard conditions for the 50 runs. Explain what will determine which method is most effective, i.e. minimal solution size, run time, highest fitness/entropy, highest solution rate. Then show results and findings and conclude to determine the victor.\\
+- Introduce experimentation with the run conditions of both GP and SNGP. Then show results and findings.\\
+- Introduce comparisons of Genetic vs Converntional means of producing RNG's and random numbers.\\
+
+\subsection{Temporary Graphs}
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+\captionof{figure}{Reduced Pop size of SNGP}
+\resizebox{220pt}{!}{
+\begin{tikzpicture}
+\begin{axis}[width=\textwidth, line width=2pt, grid=major,grid style={dashed}, ymax = 100, ymin = 0, xmin = 0, xmax = 100, every axis label/.append style={font=\Large}, every tick label/.append style={font=\Large},
+    xlabel={Population Size},
+    ylabel={Solution Rate (\%)}, smooth,  xtick={0,20,40,60, 80, 100},
+stack plots=y,
+enlarge x limits=false]
+\addplot [color=lblue] table [x=a, y=b, col sep=space, mark=none, smooth, color=lblue] {sngpreduced.dat}  {};
+\end{axis}
+\end{tikzpicture}}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+\captionof{figure}{Reduced Pop size of GP}
+  \resizebox{220pt}{!}{
+\begin{tikzpicture}
+\begin{axis}[width=\textwidth, line width=2pt, grid=major,grid style={dashed}, ymax = 100, ymin = 0, xmin = 0, xmax = 500, every axis label/.append style={font=\Large}, every tick label/.append style={font=\Large},
+    xlabel={Population Size},
+    ylabel={Solution Rate (\%)}, smooth,  xtick={0,100,200,300,400, 500},
+stack plots=y,
+enlarge x limits=false,]
+\addplot [color=lred] table [x=a, y=b, col sep=space, mark=none, smooth, lred] {gpreduced.dat}  {};
+\end{axis}
+\end{tikzpicture}}
+\end{minipage}
+\end{figure}
+
+
+
+
+\section{Learning Points}
+
+\section{Professional Issues}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{thebibliography}{10}
+
+\bibitem{kozarng}
+  John R. Koza, 
+  \emph{Evolving a Computer Program to Generate Random Numbers Using the Genetic Programming Paradigm}. 
+  Stanford University, 
+  1991.
+
+\bibitem{jacksonsngp}
+  David Jackson,
+  \emph{Single Node Genetic Programming on Problems with Side Effects}.
+  University of Liverpool,
+  2012.
+
+\bibitem{mitchell}
+  Melanie Mitchell,
+  \emph{An Introduction to Genetic Algorithms}.
+  MIT Press,
+  1999.
+
+\bibitem{lapantebio}
+  Phillip A. Laplante,
+  \emph{Biocomputing}.
+  Nova Science Publishers Inc,
+  2003.
+
+\bibitem{introgp}
+  R. Poli, W. B. Langdon, N. F. McPhee, J. R. Koza, 
+  \emph{A Field Guide to Genetic Programming}. 
+  University of Essex, 
+  2008.
+
+\bibitem{kozagpbook}
+  John R. Koza, 
+  \emph{Genetic Programming. On the Programming of Computers by Means of Natural Selection}. 
+  MIT Press, 
+  1992.
+
+\bibitem{kozamux}
+  John R. Koza,
+  \emph{A Hierarchical Approach to Learning the Boolean Multiplexer Function}
+  Stanford University,
+  1990.
+
+\bibitem{cprog}
+  Brian W. Kernighan, Dennis M. Ritchie, 
+  \emph{C Programming Language}.
+  2nd Edition, 
+  Prentice Hall Professional Technical Reference, 
+  1988.
+
+\bibitem{jacksonsngp2}
+  David Jackson,
+  \emph{A New, Node-Focused Model for Genetic Programming}.
+  Proceedings of the 15th European Conference on Genetic Programming, EuroGP 2012, 
+  Springer Verlag
+  2012.
+
+\bibitem{prnggp}
+  C. Lamenca-Martinez, J.C. Hernandez-Castro,
+  J.M. Estevez-Tapiador, and A. Ribagorda
+  \emph{Lamar: A New Pseudorandom Number Generator Evolved by means of Genetic Programming}.
+  University of Madrid,
+  2006.
+
+\bibitem{entropy}
+  Robert M. Gray
+  \emph{Entropy and Information Theory}.
+  First Edition (Corrected),
+  Stanford Unviersity
+  2000.
+
+\end{thebibliography}
+
+\end{document}
