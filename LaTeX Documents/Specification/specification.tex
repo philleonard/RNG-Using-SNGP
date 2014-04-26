@@ -1,0 +1,232 @@
+\documentclass[a4paper,10.5pt]{article}
+\usepackage{mathtools}
+\usepackage{listings}
+\usepackage[utf8x]{inputenc}
+\usepackage[left=2.2cm,top=2cm,right=2.2cm,bottom=2cm,nohead,nofoot]{geometry}
+\setlength{\footskip}{25pt}
+\renewcommand{\footnoterule}{%
+  \kern -3pt
+  \hrule width \textwidth height 0.5pt
+  \kern 2pt
+}
+\usepackage{marginnote}
+\usepackage{pgfgantt}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\title{Random Number Generation using Genetic Programming Specification}
+\author{Philip Leonard}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+This is the specification document for the project; `Random Number Generation using Genetic Programming' by Philip Leonard, supervised by Dr David Jackson (primary supervisor) and Professor Paul Dunne (secondary supervisor). This document covers the project description, the statement of deliverables, the conduct of the project \& plan, and the bibliography.\\\\
+\textbf{Keywords:} Genetic Algorithm (GA), Genetic Programming/Program (GP), Pseudo Random Number Generator (PRNG), Random Number Generator (RNG), Entropy, Single Node Genetic Programming/Program (SNGP), Crossover, Mutation.
+\end{abstract}
+\section{Project Description}
+%Explain project being done under supervision of Dr David Jackson
+%Introduce the Idea of Genetic Programming
+Inspired by Evolutionary Algorithms, Genetic Programming is a method used to evolve computer programs using the Darwinist theory of natural selection (survival of the fittest);
+\begin{description}
+  \item[1)]
+  \ \ To begin with, a random initial population of computer programs (traditionally in a tree structure) is generated from a set of functions/operators and terminals. 
+  \item[2)]
+ \ \ \ A fitness function is used to assess the fitness of each program, i.e. how well the program does it's job, or how accurate the computed output is. 
+  \item[3)]
+  \ \ \ Genetic operations such as crossover and mutation are used in order to generate new offspring programs.
+  \item[4)]
+ \ \ \ The fitness of the new population is then assessed again, and the programs for the next generation are then selected.
+\end{description}
+
+The process from steps three and four are then repeated, creating new generations of ``fitter" programs. Generally, Genetic Program runs terminate when a member of the population reaches a certain pre-defined fitness, or when the run has reached a certain number of generations. Fitness functions, probabilities and genetic operations all vary from problem to problem.\\
+
+%Introduce the Idea of a PRNGs
+A Pseudo Random Number Generator (PRNG) is a program/algorithm which generates a number that possesses the characteristics of a truly random number. These programs typically employ seed values (an example being the number of nanoseconds since the Unix epoch\footnote{00:00:00 (UTC), Thursday, 1 January 1970}), or they use a sequence of consecutive numbers as an input. Mathematical operations are applied to this input in order to fabricate a ``random" number or bit sequence. This differs from true random number generators which typically use a piece of hardware to measure an unpredictable environmental occurrence such as radiation, measured by a Geiger Counter. \\
+
+%Introduce the Project and how Genetic Programming will be used 
+Using the paper by Koza \cite{kozarng}, the aim of this project is to replicate/implement his research of `Evolving a Computer Program to Generate Random Numbers Using the Genetic Programming Paradigm'; taking a sequence of consecutive numbers as the input to produce a random bit sequence. I shall then implement the same idea of evolving a PRNG but by using a newly developed technique known as Single Node Genetic Programming (SNGP). Unlike traditional Genetic Programming, with SNGP every member of the population contains a single program node\cite[p.1]{jacksonsngp}. I can then compare the results of the two Genetic Programming methodologies, to find which method performs the best in this specific problem domain.
+%Introduce SNGP and how the results from that and standard GP will be compared
+
+\section{Statement of Deliverables}
+This section describes what components will formulate the project in its entirety.
+%Anticipated Documentation
+\\Documentation will primarily be technical, due to the projects problem solving nature. User guides will be minimal as there will be limited interaction and inputs to the software, as the aim of the program is for it to autonomously solve a problem. The technical documentation will cover the structure of the program and the program code, which in turn will partially act as the end user documentation, as users of the software will be technically educated in the area.\\
+
+%Anticipated Software
+The program will be developed in the C programming language, and the software itself will be small but complex in order to solve such a specific problem. As covered above, user interaction with the program will be limited. It will possibly include basic program initialisations such as; maximum runs, mutation \& crossover probabilities, population size and terminating fitness value etc via a command line interface. This will be there to aid the testing of the program under different conditions. For each run of the program, it will output the fittest random number generator in a tree form, and it's fitness value. The fitness of a program will be measured by implementing a fitness function which measures the entropy of the output of each program. Members of the population will be represented as S expressions in prefix notation. By implementing a prefix calculator, the output of each  PRNG can be calculated. From this, the entropy of the bit sequence (which in turn becomes the fitness of the program) will be calculated.
+The idea and explanation of mathematical entropy shall be introduced in the technical documentation.  The tree structures of the fittest PRNG from each run, and the smallest PRNG produced\footnote{The smallest PRNG that still achieved greater or equal to the termination entropy value over all the runs. This allows the user to see the best PRNG and the most efficient PRNG that still meets the entropy criteria.} from all of the runs shall be written to files so that the user can then easily obtain the results. The same idea will then be implemented for SNGP.\\
+
+%Anticipated experiments
+Experimenting will allow me to gather data on running the Genetic Program under different variable inputs for both SNGP and classical GP. For both SNGP and GP, I shall run test cases with varying;  population sizes, number of generations, mutation \& crossover probabilities and fitness level termination values etc...  As covered before this could possibly be done via the command line interface making it easier to execute test cases. From this I can gather entropy data for both approaches, under different conditions.\\
+
+%Methods for evaluating the work
+After test data has been gathered a variety of possible methods can be ultilised to evaluate the programs. By taking the program and it's entropy produced by a run of the GP, I could compare it against widely used Random Number Generators (RNGs) such as; the \emph{rand()} function in the stdlib.h C library, and other common commercial RNGs. The same can be done for the SNGP approach. But most importantly, I will be comparing both SNGP and tree based GP approaches according to entropy and the conditions of each run. This will give me a three way comparison between different PRNGs (commercial and those evolved by GP), thus giving me an abundance of methods to deduce which is the best solution for generating random numbers.
+
+\section{Conduct of the Project and Plan}
+Researching has been and will be a dominating factor in making preparations for the project. As the topic of GP was relatively new to me, I began studying the basics of Genetic Algorithms (GAs) by reading \cite[p.1 - 24]{mitchell}. After introducing myself to the idea of GAs, I refined my studying to the Genetic Programming paradigm where I read \cite[p.1 - 35]{introgp} and \cite[p.73 - 191]{kozagpbook}. From this I felt that I had gained a solid introduction, so I moved onto reading the paper on which this project is based by Koza \cite{kozarng}, which describes the method of evolving a PRNG using GP. I also studied Genetic Programming code for an implementation of the Multiplexer Problem by Koza \cite{kozamux}, which gave me a good idea of how Genetic Programming is implemented in C code. Now I have a strong conceptual image of the workings of my project, which will allow me to write detailed design documents. Future research will include studying SNGP using sources like \cite{jacksonsngp}, which will then allow me to implement the same idea of evolving a RNG but using the SNGP methodology. I shall use \cite{cprog} as a reference to assist me in the implementation stage.\\
+
+Genetic Programs typically either randomly generate their own initial population or they obtain a seed population from somewhere. In this project I shall be randomly generating the initial population, so no data will need to be gathered from external sources.\\
+
+The architectural components which define the Genetic Programming paradigm are synonymous across most problems which use this technique. These include; initial population generation, a grow function, a fitness function and genetic operations (crossover and mutation). Therefore in the design stage, I will focus on the functional design of the software, representing the program in an algorithm like flow chart manner. I shall delve specifically into the job of each function and roughly define it's role in a pseudo code style. \\
+
+Implementing the program in terms of extra hardware and software will be relatively straight forward. The are no special hardware requirements for the program. The C implementation of \cite{kozamux} ran well on a standard desktop computer, which tells me that no extra computational power will be required to run my program, especially when it is coded efficiently. No extra software will be required for my project either, merely the standard C libraries.\\
+
+There are certain risks associated with this project. The Genetic Programming Paradigm is relatively new to me, so there is a possibility of a hold up in the design and implementation stages, while I continue to refine my new skills. Sufficient studying of Genetic Programming resources such as \cite{mitchell, introgp, kozagpbook}, and the aid of the Biocomputation module\footnote{COMP305, where Genetic Algorithm and Genetic Programming topics are covered} which I am currently taking should help resolve this issue. Making the Genetic Program efficient, and as efficient as the SNGP implementation could be a challenge in order to gain fair results by comparing the two methods.\\\\
+Please see fig .1 for a detailed Gantt Chart, representing the full plan and the timescale for this project.
+\section{Bibliography for the Project}
+The sources referenced in this document from \cite{kozarng} to \cite{cprog} have and will continue to be used in this project for referencing and for research. Other materials which will be used in the project are as follows;
+
+- \cite{jacksonsngp2} For other SNGP material.
+
+-  \cite{prnggp} For another approach to Pseudo Random Number Generation using GP.
+
+- \cite{entropy} Entropy calculation for the fitness function. 
+
+\begin{thebibliography}{9}
+
+\bibitem{kozarng}
+  John R. Koza, 
+  \emph{Evolving a Computer Program to Generate Random Numbers Using the Genetic Programming Paradigm}. 
+  Stanford University, 
+  1991.
+
+\bibitem{jacksonsngp}
+  David Jackson,
+  \emph{Single Node Genetic Programming on Problems with Side Effects}.
+  University of Liverpool,
+  2012.
+
+\bibitem{mitchell}
+  Melanie Mitchell,
+  \emph{An Introduction to Genetic Algorithms}.
+  MIT Press,
+  1999.
+
+\bibitem{introgp}
+  R. Poli, W. B. Langdon, N. F. McPhee, J. R. Koza, 
+  \emph{A Field Guide to Genetic Programming}. 
+  University of Essex, 
+  2008.
+
+\bibitem{kozagpbook}
+  John R. Koza, 
+  \emph{Genetic Programming. On the Programming of Computers by Means of Natural Selection}. 
+  MIT Press, 
+  1992.
+
+\bibitem{kozamux}
+  John R. Koza,
+  \emph{A Hierarchical Approach to Learning the Boolean Multiplexer Function}
+  Stanford University,
+  1990.
+
+\bibitem{cprog}
+  Brian W. Kernighan, Dennis M. Ritchie, 
+  \emph{C Programming Language}.
+  2nd Edition, 
+  Prentice Hall Professional Technical Reference, 
+  1988.
+
+\bibitem{jacksonsngp2}
+  David Jackson,
+  \emph{A New, Node-Focused Model for Genetic Programming}.
+  Proceedings of the 15th European Conference on Genetic Programming, EuroGP 2012, 
+  Springer Verlag
+  2012.
+
+\bibitem{prnggp}
+  C. Lamenca-Martinez, J.C. Hernandez-Castro,
+  J.M. Estevez-Tapiador, and A. Ribagorda
+  \emph{Lamar: A New Pseudorandom Number Generator Evolved by means of Genetic Programming}.
+  University of Madrid,
+  2006.
+
+\bibitem{entropy}
+  Robert M. Gray
+  \emph{Entropy and Information Theory}.
+  First Edition (Corrected),
+  Stanford Unviersity
+  2000.
+
+\end{thebibliography}
+
+%\begin{landscape}
+\begin{sidewaysfigure}
+
+\centering
+\begin{ganttchart}[y unit title=0.4cm,
+y unit chart=0.5cm,
+vgrid,hgrid, 
+title label anchor/.style={below=-1.6ex},
+title height=1,
+bar/.style={fill=gray!50},
+bar/.append style={fill=gray!100},
+bar incomplete/.append style={fill=gray!50},
+incomplete/.style={fill=white},
+progress = today,
+today = 4,
+bar height=0.7,
+group right shift=0,
+group top shift=.6,
+group height=.3,
+group peaks height =.2,
+milestone/.append style={fill=gray!50}
+]
+{1}{34}
+%labels
+\gantttitle{Final Year Project}{34} \\
+\gantttitle{Sep}{2} 
+\gantttitle{Oct}{4} 
+\gantttitle{Nov}{4} 
+\gantttitle{Dec}{4} 
+\gantttitle{Jan}{4} 
+\gantttitle{Feb}{4} 
+\gantttitle{Mar}{4} 
+\gantttitle{Apr}{4} 
+\gantttitle{May}{4} \\
+%tasks
+\ganttbar{Research}{1}{6} \\
+\ganttgroup{Specification}{2}{4} \\
+\ganttbar{Write Specification}{2}{4} \\
+\ganttgroup{Design}{5}{10} \\
+\ganttbar{Plan Design}{5}{5}\\
+\ganttbar{Write Design Document}{6}{9}\\
+\ganttbar{Plan Presentation}{9}{9}\\
+\ganttbar{Give Design Presentation}{10}{10} \\
+\ganttmilestone{Implementation Documentation Complete}{10}\\
+\ganttgroup{Implementation}{11}{26} \\
+\ganttbar{Implement Koza's PRNG GP}{11}{18}\\
+\ganttbar{Implement SNGP Approach}{19}{23} \\
+\ganttbar{Compare GP vs SNGP}{24}{26}\\
+\ganttmilestone{Implementation Complete}{26} \\
+\ganttgroup{Demonstration}{27}{28} \\
+\ganttbar{Write/Plan Demonstration}{27}{27} \\
+\ganttbar{Give Demonstration}{28}{28} \\
+\ganttgroup{Dissertation}{29}{34} \\
+\ganttbar{Plan Dissertation}{29}{29}\\
+\ganttbar{Write Dissertation}{30}{34} \\
+\ganttmilestone{Project Completed}{34} \\
+
+%relations
+\ganttlink[link type=dr]{elem2}{elem4} 
+\ganttlink[link type=dr]{elem4}{elem5}
+\ganttlink[link type=dr]{elem4}{elem6}
+\ganttlink[link type=dr]{elem5}{elem8}
+\ganttlink[link type=dr]{elem6}{elem7}
+\ganttlink[link type=dr]{elem7}{elem8} 
+\ganttlink[link type=dr]{elem8}{elem10} 
+\ganttlink[link type=dr]{elem10}{elem11}
+\ganttlink[link type=dr]{elem10}{elem12}
+\ganttlink[link type=dr]{elem11}{elem12}
+\ganttlink[link type=dr]{elem12}{elem13} 
+\ganttlink[link type=dr]{elem13}{elem15}
+\ganttlink[link type=dr]{elem15}{elem16}
+\ganttlink[link type=dr]{elem16}{elem18}
+\ganttlink[link type=dr]{elem18}{elem19}
+\ganttlink[link type=dr]{elem19}{elem20}
+
+\end{ganttchart}
+
+\caption{Gantt Chart - Work plan}
+\end{sidewaysfigure}
+%\end{landscape}
+\end{document}

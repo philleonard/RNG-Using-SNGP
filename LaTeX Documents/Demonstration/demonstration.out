@@ -1,0 +1,12 @@
+\BOOKMARK [2][]{Outline0.1}{Implementation Snapshot}{}% 1
+\BOOKMARK [3][]{Outline0.1.1.4}{Structs}{Outline0.1}% 2
+\BOOKMARK [3][]{Outline0.1.2.6}{Fitness Function}{Outline0.1}% 3
+\BOOKMARK [3][]{Outline0.1.3.9}{Selection}{Outline0.1}% 4
+\BOOKMARK [3][]{Outline0.1.4.10}{SNGP Driving Factor}{Outline0.1}% 5
+\BOOKMARK [2][]{Outline0.2}{Analysis Snapshot}{}% 6
+\BOOKMARK [3][]{Outline0.2.1.12}{Sample GP vs SNGP}{Outline0.2}% 7
+\BOOKMARK [3][]{Outline0.2.2.13}{Sample SNGP vs GP Scalar Entropies}{Outline0.2}% 8
+\BOOKMARK [3][]{Outline0.2.3.15}{50 Run Average GP vs SNGP}{Outline0.2}% 9
+\BOOKMARK [3][]{Outline0.2.4.16}{50 Run C Rand\(\) vs Random.org vs GP vs SNGP}{Outline0.2}% 10
+\BOOKMARK [3][]{Outline0.2.5.17}{Graphical Data}{Outline0.2}% 11
+\BOOKMARK [2][]{Outline0.3}{Progress}{}% 12

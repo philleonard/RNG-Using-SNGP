@@ -1,0 +1,10 @@
+\frametitle{SNGP Driving Factor}
+
+In GP, the evolution of the population is done regardless to fitness progress. In SNGP the most effective climbing approach I found was to drive on either the increase of the total population fitness OR by the fittest members fitness increase;\newline
+
+\begin{lstlisting}[language=C, basicstyle=\scriptsize]
+if (best_fitness_old >= best_fitness && total_pop_fitness_old >= total_pop_fitness)
+{
+ //Then throw away new graph population after mutation
+}
+\end{lstlisting}

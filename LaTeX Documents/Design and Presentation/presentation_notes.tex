@@ -1,0 +1,98 @@
+\documentclass[a4paper,10.5pt]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage[left=2.2cm,top=1.8cm,right=2.2cm,bottom=2cm,nohead,nofoot]{geometry}
+\setlength{\footskip}{25pt}
+
+\title{Presentation notes}
+\date{}
+\begin{document}
+\maketitle
+
+\noindent \textbf{Slides 1 - 2}
+
+Introduce the presentation\\
+
+\noindent \textbf{Slide 3}
+
+Talk about the three stages;
+
+\begin{itemize}
+\item RNG using GP - Koza's paper ``Evolving a Computer Program to Generate Random Numbers Using the Genetic Programming Paradigm."
+\item RNG using SNGP - Jacksons paper ``A New, Node-Focused Model for Genetic Programming."
+\item Evaluation. GP vs SNGP and GP + SNGP vs other RNG.
+\end{itemize}
+
+\noindent \textbf{Slide 4: DESIGN}
+
+GP overview, workings of single RNG. Walk through flowchart.\\
+
+\noindent \textbf{Slide 5}
+
+Inputs are there for testing the program under different conditions.\\
+
+\noindent \textbf{Slide 6}
+
+All functions have an arity of 2.
+All Terminals have an arity of 1.\\
+
+\noindent \textbf{Slide 7}
+
+Fitness of a RNG is the equality in occourance of size 1 to 7 sub sequences in the binary sequence output.\\
+
+\noindent \textbf{Slide 8}
+
+FPR encourages breeding of fittest candidates.
+
+Crossover point chosen between external and internal nodes with probabilities definied by the user. \\
+
+\noindent \textbf{Slide 9}
+
+Outputs written to file on each generation to allow user to manipulate the data. 
+
+Program terminates on max \# of generations or a target fitness value defined by the user.\\
+
+\noindent \textbf{Slide 10}
+
+Same idea of evolving a RNG but using SNGP.
+
+Walk through flow chart\\
+
+\noindent \textbf{Slide 11}
+
+Entire population is a single graph structure.\\
+
+\noindent \textbf{Slide 12}
+
+Makes use of Dynamic Programming, tree outputs stored to be used to form outputs further up.
+
+Each node is the root of a tree\\
+
+\noindent \textbf{Slide 13}
+
+Terminals are added once, functions added to fill ret of population. Successors assigned randomly. Outputs and fitnesses are calculated as nodes are added.\\
+
+\noindent \textbf{Slide 14}
+
+$smut$ - an intenal node is selected randomly and one of it's successors is randomly changed (still deeper).\\
+In example the last one $\{+ - * J 0 1 \% 2 3\}$ changes to $\{+ - * J 0 1 2\}$\\
+\newpage
+\noindent \textbf{Slide 15}
+ 
+Outputs same as GP. Terminates on Max \# gen or when $\sum r_i$ reaches target.\\
+
+\noindent \textbf{Slides 16 - 17 : EVALUATION}
+
+Input parameters which are the same for GP and SNGP are used in test cases. Two values for each param, all combinations = 8 test cases.\\
+
+\noindent \textbf{Slide 18}
+
+Methods for using the output data to compare approaches.\\
+
+\noindent \textbf{Slide 19}
+
+Testing against other PRNG \& TRNG.\\
+
+\noindent \textbf{Slide 20}
+
+Updated project plan. Project is going to plan.
+\end{document}

@@ -1,0 +1,3 @@
+Run No., Time (sec), Solution?, Solution Size
+1, 1890.286011, TRUE, 27.992995, 77
+2, 2414.976074, TRUE, 27.990542, 291

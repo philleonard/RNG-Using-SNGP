@@ -1,0 +1,11 @@
+﻿Build started 24/3/2014 7:42:35 PM.
+     1>Project "C:\Users\asus\Dropbox\Year 3\Final Year Project\RANDOM.ORG-Entropy\RANDOM.ORG-Entropy\RANDOM.ORG-Entropy.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt "TRNG_C-PRNG.cpp"
+         TRNG_C-PRNG.cpp
+     1>c:\users\asus\dropbox\year 3\final year project\random.org-entropy\random.org-entropy\trng_c-prng.cpp : fatal error C1033: cannot open program database 'c:\users\asus\dropbox\year 3\final year project\random.org-entropy\random.org-entropy\debug\vc110.idb'
+     1>Done Building Project "C:\Users\asus\Dropbox\Year 3\Final Year Project\RANDOM.ORG-Entropy\RANDOM.ORG-Entropy\RANDOM.ORG-Entropy.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:01.95

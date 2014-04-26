@@ -1,0 +1,11 @@
+\contentsline {section}{\numberline {1}Summary of Proposal}{2}
+\contentsline {section}{\numberline {2}Design}{2}
+\contentsline {subsection}{\numberline {2.1}System Design}{2}
+\contentsline {subsubsection}{\numberline {2.1.1}GP Approach}{3}
+\contentsline {subsubsection}{\numberline {2.1.2}SNGP Approach}{11}
+\contentsline {subsection}{\numberline {2.2}System Evaluation Design}{15}
+\contentsline {subsubsection}{\numberline {2.2.1}GP vs SNGP}{15}
+\contentsline {subsubsection}{\numberline {2.2.2}Other Random Number Generators}{16}
+\contentsline {subsubsection}{\numberline {2.2.3}C Rand function}{17}
+\contentsline {subsubsection}{\numberline {2.2.4}True Random Number Generator comparison}{17}
+\contentsline {section}{\numberline {3}Plan Progress}{17}

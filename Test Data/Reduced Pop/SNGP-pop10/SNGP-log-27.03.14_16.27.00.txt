@@ -1,0 +1,3 @@
+Smut Count, Time (sec), Fitness Sum, Average Fitness, Fittest Fitness, Scalar Entropy (1 bit), Scalar Entropy (2 bit), Scalar Entropy (3 bit), Scalar Entropy (4 bit), Scalar Entropy (5 bit), Scalar Entropy (6 bit), Scalar Entropy (7 bit), Solution?, Fittest RNG Tree
+1, 0.658000, 28.000000, 2.800000, 7.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, FALSE, +J3
+1, 176.358002, 28.000000, 2.800000, 7.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, FALSE, +J3
