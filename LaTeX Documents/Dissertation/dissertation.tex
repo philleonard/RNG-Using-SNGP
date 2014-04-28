@@ -795,48 +795,48 @@ a b c
 \newpage
 \section{Abstract}
 
-This is the final report for the project; `Random Number Generation Using Genetic Programming' by Philip Leonard, supervised by Dr David Jackson (primary supervisor) and Professor Paul Dunne (secondary supervisor). This document covers all aspects of the project from the introduction and background, to the design, implementation and analysis of the project in order to give the reader an understanding of how I implemented the project and what things I found when evaluating the project.
+This is the final report for the project; `Random Number Generation Using Genetic Programming' by Philip Leonard, supervised by Dr David Jackson (primary supervisor) and Professor Paul Dunne (secondary supervisor). This document covers all aspects of the project from the introduction and background, to the design, implementation and analysis of the project in order to give the reader an understanding of how I implemented the project and what discoveries I made when evaluating the project.
 
-This report demonstrates that using methods described by Koza in \cite{kozarng}, it is possible to genetically breed Random Number Generators (RNG) that produce sequences of pseudo random bits with near maximal entropy. All of the steps for designing and implementing the Genetic Programming (GP) approach are covered in detail. The results I obtained for the GP approach are similar to those produced by Koza. This allowed me to then make fair comparisons to the other methods of producing RNGs.
+This report demonstrates that using methods described by Koza in \cite{kozarng}, it is possible to genetically breed Random Number Generators (RNG) that produce sequences of pseudo random bits with near maximal entropy, using the Genetic Programming (GP) paradigm. All of the steps for designing and implementing the GP approach are covered in detail in this report. The results I obtained for the GP approach match those produced by Koza. This allowed me to then make fair comparisons to the other methods of producing RNGs, by both evolutionary and conventional methods.
 
-This report more importantly shows that it is possible to produce better results using the Single Node Genetic Programming (SNGP) methodology described by Jackson in \cite{jacksonsngp}. Using the SNGP paradigm, I was able to achieve results showing that it possible to obtain smaller and higher entropy RNGs (on average) six times quicker and at twice the rate of Koza's standard GP implementation manages to achieve. The stages of designing and implementing the SNGP approach, like the GP approach, are covered in detail in this report.
+This report more importantly shows that it is possible to produce better results using the Single Node Genetic Programming (SNGP) methodology described by Jackson in \cite{jacksonsngp}. Using the SNGP paradigm, it possible to obtain smaller and higher entropy RNGs, (on average) six times quicker and at twice the rate of Koza's standard GP implementation manages to achieve. The stages of designing, implementing and evaluating the SNGP approach, like the GP approach, are covered in detail in this report.
 
-As well as this, this report also demonstrates that the Random Number Generators Produced genetically by these methods also produce sequences of random bits with higher entropy than other widely used RNGs. It not only outperforms the C programming Linear Congruential Generator (LCG) algorithm implemented in the $rand()$ function, but can also perform better than a Hardware/``True" Random Number Generator that creates random bit sequences from observed atmospheric noise.
+As well as this, this report also demonstrates that the Random Number Generators Produced genetically by these methods also produce sequences of random bits with higher entropy than other widely used RNGs. It not only outperforms the C programming languages Linear Congruential Generator (LCG) algorithm implemented in the $rand()$ function, but can also perform better than a Hardware/``True" Random Number Generator that creates random bit sequences from observed atmospheric noise.
 
 This report also shows how a RNG produced by these evolutionary means might be implemented for use in the C programming language, by showing a pragmatic approach for developers to achieve higher entropy random numbers for use in their applications and software. I also show however that this comes at the cost of increased computation time compared to the C $rand()$ function.
 
 At the end of the document I also discuss some further research that can be carried out in order to find ways of further improving the results I obtained by modifying the GP and SNGP implementations. I also discuss the learning process through this project and explaining the new skills that I have acquired. I go onto discuss how this project conformed to the British Computer Society: Chartered Institute for IT's code of conduct and code of practice (where it is applicable).
 
-All of the code for the implemented software can be found in the appendix of this report and on the CD provided. As well as this, all of the pdf documents produced for this project and the \LaTeX\ files used to create them can be found there, as well as all of the test data used in evaluating all of the approaches.
+All of the code for the implemented software can be found in the appendix of this report on the CD provided. As well as this, all of the pdf documents produced for this project and the \LaTeX\ files used to create them can be found there, as well as all of the test data used in evaluating all of the approaches.
 \newline
 
 \noindent \textbf{Keywords:} Genetic Algorithm (GA), Genetic Programming/Program (GP), Pseudo Random Number Generator (PRNG), Random Number Generator (RNG), True Random Number Generator (TRNG), Entropy, Single Node Genetic Programming/Program (SNGP), Crossover, Mutation, Fitness Proportionate Reproduction (FPR), Linear Congruential Generator (LCG).\newline
 
-\noindent \textbf{Word Count:} 14954 words\footnote{Words counted using \emph{TexCount} web service (v3.0.0.24) : http://app.uio.no/ifi/texcount/online.php}. Not including words in contents, appendix, bibliography, diagrams, equations, headings or code listings.
+\noindent \textbf{Word Count:} 14965 words\footnote{Words counted using \emph{TexCount} web service (v3.0.0.24) : http://app.uio.no/ifi/texcount/online.php}. Not including words in contents, appendix, bibliography, diagrams, equations, headings or code listings.
 \newpage
 
 \newpage
 \section{Introduction}
 %Whats a RNG?
 Random Number Generators have many computational, scientific and societal applications. They are essential in; gambling, lottery draws, cryptography, statistical sampling, Monte Carlo simulations, randomized algorithms, password generation and other applications where an unpredictable result is desired. Randomness can be interpreted in more than one way and has no strict mathematical definition. There are a series of tests that can be run on a set of data in order to evaluate some conception of randomness. These include the gap test, frequency test, runs test and information entropy test amongst others described in the NIST\footnote{National Institute of Standards and Technology} ``\emph{Test Suite for Random and Pseudorandom Number Generators for Cryptographic Applications}" \cite{nist}. Whilst there isn't a way to prove randomness, these statistical tests are a good way of analysing randomness in the eyes of the user and for their practical application. In this project, randomness is tested using the Shannon Entropy equation \cite[p.2]{kozarng}, which is a measure of the unpredictability/uncertainty in a random variable.
-A Pseudo Random Number Generator (PRNG) is a program/algorithm which generates numbers that possess the characteristics of a ``truly" random number. These programs typically employ seed values (an example being the number of nanoseconds since the Unix epoch\footnote{00:00:00 (UTC), Thursday, 1 January 1970}), or they use a sequence of consecutive numbers as an input. Mathematical operators are applied to this input in order to fabricate a ``random" number or bit sequence. This differs from true random number generators which typically use a piece of hardware to measure an unpredictable environmental occurrence such as radiation, measured by a Geiger Counter. 
+A Pseudo Random Number Generator (PRNG) is a program/algorithm which generates numbers that possess the characteristics of a ``truly" random number. These programs typically employ seed values (an example being the number of nanoseconds since the Unix epoch\footnote{00:00:00 (UTC), Thursday, 1 January 1970}), or they use a sequence of consecutive numbers as an input. Mathematical operators are applied to this input in order to fabricate a ``random" number or bit sequence. This differs from True Random Number Generators which typically use a piece of hardware to measure an unpredictable environmental occurrence such as atmospheric noise measured using a radio antenna \cite{randomorg} or the quantum effects on photons passing through a semi-transparent mirror\cite{quant}.
 
 %What is Genetic Programming - EXPAND ON THIS
 The Genetic Programming paradigm is an evolutionary method of solving problems, where the implementer can define a task where solutions can be randomly generated and tested by some fitness function. The population can then be evolved based on their fitness in order to search through the problem space to find solutions which meet the fitness requirements of the implementer. 
 
 %Aim of the Project
-Evolving Random Number Generators is therefore an applicable problem instance for Genetic Programming, as there is no deterministic way of producing a RNG with high entropy.  The aim of the project is to assess two Genetic Programming methodologies in order to determine which is best suited for genetically breeding RNGs. The method described by Koza in \cite{kozarng} was followed in order to implement the idea of evolving a random number generator in the widely known traditional Genetic Programming methodology. The next step was to implement the same idea using the Single Node Genetic Programming Methodology described by Jackson in \cite{jacksonsngp}. The effectiveness of both where then compared by gathering data from both implementations and conducting some cross examination to determine the victor. In order to determine the effectiveness of the Random Number Generators as a real world solution, entropy data was gathered from pre-existing and widely used RNGs. These were namely the C rand function, which is a PRNG that makes use of a Linear Congruential Generator algorithm in order to produce random numbers, and a ``True" Random Number Generator was also evaluated in order to compare the effectiveness of the genetically produced RNGs against a non-deterministic source of random data. 
+Evolving Random Number Generators is therefore an applicable problem instance for Genetic Programming, as there is no deterministic way of producing a RNG with high entropy.  The aim of the project is to assess two Genetic Programming methodologies in order to determine which is best suited for genetically breeding RNGs. The method described by Koza in \cite{kozarng} was followed in order to implement the idea of evolving a RNG in the widely known traditional Genetic Programming methodology. The next step was to implement the same idea using the Single Node Genetic Programming Methodology described by Jackson in \cite{jacksonsngp}. The effectiveness of both where then compared by gathering data from both implementations and conducting some cross examination to determine the victor. In order to determine the effectiveness of the RNGs as a real world solution, entropy data was gathered from pre-existing and widely used RNGs. These were namely the C rand function, which is a PRNG that makes use of a Linear Congruential Generator algorithm in order to produce random numbers, and a TRNG was also evaluated in order to compare the effectiveness of the genetically produced RNGs against a non-deterministic source of random data. 
 
 %Challanges of the project?
 Attempting to match Koza's implementation was a one of the major challenges of the project. Koza doesn't give many details of how he implemented the Genetic Program. Instead he gives a theoretical overview of the operations, and then the results of his implementation. Therefore a good understanding of the GP paradigm template was required in order to take Koza's words and implement them successfully as a working program. 
 
 %Solutions produced?
-In terms of software three programs have been produced. The GP implementation and the SNGP implementation form two separate single threaded command line programs. The command line interface displays information and run progress to the user, and all the data for each generation and each run is written to log files. 
+In terms of software, three programs have been produced. The GP implementation and the SNGP implementation form two separate single threaded command line programs. The command line interface displays information and run progress to the user, and all the data for each generation and each run is written to log files. 
 The third program developed is to test both the C random number generator and the TRNG and to write the entropy data to log files as well.
-From these implementations I was then able to start to collect data. In order to gather sufficient data for analysis, I ran both the SNGP and GP implementations 50 times and also ran 50 tests of the C rand function and the TRNG. 
+From these implementations I was then able to start collecting data. In order to gather sufficient data for analysis, I ran both the SNGP and GP implementations 50 times and also ran 50 tests of the C rand function and the TRNG. 
 
 %Effectivness of solution.
-The effectiveness of the solution can be viewed in two ways. To begin with, both methods are viable ways to produce RNGs by evolutionary means. Therefore the implemented software was a successful venture. The other and perhaps more important evaluation of how effective the solutions are is whether the SNGP proves a more effective way of producing RNGs than GP, and whether they stand up to other widely used RNGs (both deterministic and non-deterministic). The results of the project are very promising. To begin with, SNGP proves a much faster way of evolving RNGs, finding solutions on average over 6 times quicker than the standard GP methodology. Not only is it quicker, but it also has a solution rate twice that of the Genetic Programming Methodology. The solutions produced by SNGP are also much smaller than those produced by GP as branches can be repeated but there values are only calculated once and then stored dynamically. The solutions produced by the two genetic methodologies also outperformed the C rand function and even the ``True" Random Number Generator. 
+The effectiveness of the solution can be viewed in two ways. To begin with, both methods are viable ways to produce RNGs by evolutionary means. Therefore the implemented software was a successful venture. The other and perhaps more important evaluation of how effective the solutions are is whether the SNGP proves a more effective way of producing RNGs than GP, and whether they stand up to other widely used RNGs (both deterministic and non-deterministic). The results of the project are very promising. To begin with, SNGP proves a much faster way of evolving RNGs, finding solutions on average over 6 times quicker than the standard GP methodology. Not only is it quicker, but it also has a solution rate twice that of the Genetic Programming Methodology. The solutions produced by SNGP are also much smaller than those produced by GP as branches can be repeated but there values are only calculated once and then stored dynamically. The solutions produced by the two genetic methodologies also outperformed the C $rand()$ function and even the TRNG.
 
 \newpage
 \section{Background}
@@ -844,20 +844,20 @@ The effectiveness of the solution can be viewed in two ways. To begin with, both
 This project is based on two pieces of research into Genetic Programming from two separate research papers. The first paper by Koza entitled ``Evolving a Computer Program to Generate Random Numbers Using the Genetic Programming Paradigm" is the main basis for the project. It describes how Random Number Generators can be evolved using Genetic Programming. Koza describes the design for the implementation, and displays his results and findings. Koza concludes that it is possible to genetically breed randomisers with high entropy. The aim of the first part of this project was to take this implementation design and implement it in the C programming language, in order to try and match his results and outcomes. 
 
 %Introduce Jacksons paper.
-The second paper used to support this project is Jacksons paper entitled ``A New, Node-Focused Model for Genetic Programming" \cite{jacksonsngp}, where he introduces a new Genetic Programming paradigm known as Single Node Genetic Programming. Instead of using a population of tree structures like that of traditional GP, SNGP uses a graph population, where every node in the graph represents the root of a tree in it's own right. In this paper, Jackson introduces the SNGP model, and evaluates it's performance over a number of test cases which he also implemented in the GP paradigm. Jackson shows that SNGP outperforms GP in terms of solution rate, speed (efficiency) and the size of the solutions produced. The aim of the second part of this project is to further prove SNGPs computational superiority over the standard GP paradigm, again using the basis of evolving a RNG introduced by Koza in \cite{kozarng}, in order to create a SNGP variant of the same problem.
+The second paper used as the foundation for this project is Jacksons paper entitled ``A New, Node-Focused Model for Genetic Programming" \cite{jacksonsngp}, where he introduces a new Genetic Programming paradigm known as Single Node Genetic Programming. Instead of using a population of tree structures like that of traditional GP, SNGP uses a graph population, where every node in the graph represents the root of a tree in it's own right. In this paper, Jackson introduces the SNGP model, and evaluates it's performance over a number of test cases which he also implemented in the GP paradigm. Jackson shows that SNGP outperforms GP in terms of solution rate, speed (efficiency) and the size of the solutions produced. The aim of the second part of this project is to further prove SNGPs computational superiority over the standard GP paradigm, again using the basis of evolving a RNG introduced by Koza in \cite{kozarng}, in order to create a SNGP variant of the same problem.
 
 %Talk comparitively about the GP implementation to Koza's.
-After implementing the GP variant of generating RNGs by evolutionary means, I was able to step back and compare the results I had obtained to that of Koza's. As stated previously, trying to obtain the same results as Koza in \cite{kozarng} was one of the main challenges of the project. I was able to achieve individual solutions with fitness/entropy that matched the fittest that Koza produced in \cite[p.6]{kozarng} of 27.996 out of 28.00 maximal bits of entropy. In general, the number of generations required to find solutions were greater in my implementation as opposed to the results produced by Koza. All other observations made by Koza however matched the ones I obtained from my implementation. For example, Koza explains that in the run that generated his fittest solution; \emph{``entropy reached and slowly improved within the 27.800 to 27.900 area"}. In all runs of my implementation I observed the same phenomenon of the GP implementation struggling to obtain the last 0.1 bits of entropy, and in fact is where most runs spent a large number of generations searching. I also obtained similar sized solutions to Koza's results.
+After implementing the GP variant of generating RNGs by evolutionary means, I was able to step back and compare the results I had obtained to that of Koza's. As stated previously, trying to obtain the same results as Koza in \cite{kozarng} was one of the main challenges of the project. I was able to achieve individual solutions with fitness/entropy that matched the fittest that Koza produced in \cite[p.6]{kozarng} of 27.996 out of 28.00 maximal bits of entropy. In general, the number of generations required to find solutions were greater in my implementation as opposed to the results produced by Koza. All other observations made by Koza however matched the ones I obtained from my implementation. For example, Koza explains that in the run that generated his fittest solution; \emph{``entropy reached and slowly improved within the 27.800 to 27.900 area"}. In all runs of my implementation I observed the same phenomenon, and is in fact here most runs spent a large number of generations searching. I also obtained similar sized solutions to Koza's results.
 
 %Research needed and books read.
-As discussed in the specification and design documents, research was the dominating factor in preparing for this project. I began researching Genetic Algorithms \cite[p.1 - 24]{mitchell} and Genetic Programming \cite[p.1 - 35]{introgp} \cite[p.73 - 191]{kozagpbook} topics. I then researched more specifically into Genetic Programming, including a C implementations of Multiplexer Problem described in \cite{kozamux}. The focal point of my research has been around the papers by Koza \cite{kozarng}, which is the inspiration for the implementation of this project using GP, and Jackson \cite{jacksonsngp2}. In \cite{kozarng}, Koza conducts some tests of the genetically produced RNGs against RNGs that were widely used at the time\footnote{Koza's paper was published in 1991}. I also felt that to show the success of the RNGs produced by GP and SNGP in my implementations, I should do the same. I therefore did some research of current widely used RNGs today. I chose the C $rand()$ function as a comparative PRNG, and also a ``True" Random Number Generator, specifically from the random.org website. As the TRNG generates numbers by non-deterministic means, I felt it was a strong opponent to test against the (deterministic) PRNGs produced by evolutionary means.
+As discussed in the specification and design documents, research was the dominating factor in preparing for this project. I began by researching both Genetic Algorithms \cite[p.1 - 24]{mitchell} and Genetic Programming \cite[p.1 - 35]{introgp} \cite[p.73 - 191]{kozagpbook} topics. I then researched more specifically into Genetic Programming, including a C implementation of Multiplexer Problem described in \cite{kozamux}. The focal point of my research has been around the papers by Koza \cite{kozarng}, and Jackson \cite{jacksonsngp}. In \cite{kozarng}, Koza conducts some tests of the genetically produced RNGs against RNGs that were widely used at the time\footnote{Koza's paper was published in 1991}. I also felt that to show the success of the RNGs produced by GP and SNGP in my implementations, I should do the same. I therefore did some research of current widely used RNGs today. I chose the C $rand()$ function as a comparative PRNG, and also a ``True" Random Number Generator, specifically from the random.org website \cite{randomorg}. As the TRNG generates numbers by non-deterministic means, I felt it was a strong opponent to test against the (deterministic) PRNGs produced by evolutionary means.
 %Project Requirements
 The requirements for this project can be defined by 4 main objectives;
 \begin{description}
   \item[1)]
   \ \ \ Replicate the program described by Koza in \cite{kozarng}, in the C programming language. 
   \item[2)]
- \ \ \ Deliver the same idea, but by using the Single Node Genetic Programming paradigm as described by Jackson in \cite{jacksonsngp2}, again as a C program.
+ \ \ \ Deliver the same idea, but by using the Single Node Genetic Programming paradigm as described by Jackson in \cite{jacksonsngp}, again as a C program.
   \item[3)]
   \ \  Deliver an analysis and a conclusion of the best method of genetically breeding a randomiser.
    \item[4)]
@@ -1207,7 +1207,7 @@ In this section I shall cover the transition I made from design into executable 
 \subsection{GP Implementation}
 
 \subsubsection{Main Data Structures}
-The first thing that I did when I started the implementation stage was to define the primitive objects to be used and manipulated by the algorithms described in the design section. Specifically these were the set of functions and terminals that make up the tree structure, and also the structure which holds all the information about each member of the population.
+The first thing that I did when I started the implementation stage was to define the primitive objects to be used and manipulated by the algorithms described in the design section. Specifically these were the set of functions and terminals that make up the tree structures, and also the structure which holds all the information about each member of the population.
 
 I combined the set $T = \{J,\ \Re\}$ of terminals and the set $F = \{+, -, *, /, \%\}$ of functions into a struct of tokens, each token was also a struct containing two bits of information;
 
@@ -1225,7 +1225,7 @@ All the tokens needed to represent the RNG trees as prefix expressions are then 
 struct token_entry token_table [] = {{"#", -1}, {"J", -1}, {"R", -1}, {"+", 1}, {"-", 1}, {"*", 1}, {"%", 1}, {"/", 1}, {"0", -1}, {"1", -1}, {"2", -1}, {"3", -1} };
 \end{lstlisting}
 
-The next step was to describe each member in the population as some data structure. Every member has it's own specific information. As discussed in the design section (and more extensively in the design document in the appendix).
+The next step was to describe each member in the population as some data structure. Every member has it's own specific information, as discussed in the design section (and more extensively in the design document in the appendix).
 
 \begin{lstlisting}[language=C]
 struct population_member {
@@ -1237,16 +1237,16 @@ struct population_member {
 };
 \end{lstlisting}
 
-Every member in the population has it's own code (RNG tree represented as a prefix expression), binary output, length of the code, scalar entropy of the output and total fitness. These are all therefore encapsulated in the struct as seen above. A population of these structs is then formed by creating a struct of a defined population size which embodies them all;
+Every member in the population has it's own code (RNG tree represented as a prefix expression), binary output, length of the code, scalar entropy of the output and total fitness. All of this is therefore encapsulated in the struct as seen above. A population of these structs is then formed by creating a struct of a defined population size which embodies them all;
 
 \begin{lstlisting}[language=C]
 struct population_member population[POP_SIZE];
 \end{lstlisting}
 
 \subsubsection{Generating Initial Population}
-In order to obtain a full population that can be tested and evolved we must randomly generate an initial population of RNG trees. These trees as discussed are to be represented in a prefix expression so that they can be easily stored in a character array but interpreted and manipulated as trees. The following generate\_initial\_pop method is called at the beginning of the programs execution. As discussed earlier and in \cite[p.11-14]{introgp}, Koza suggests the use of the ``\emph{ramped half and half}" method. This meaning that half of the trees are created as full trees (right up to the depth limit) and the other half with as grow trees (terminals are added in randomly and not just at the depth limit). I implemented my initial population function in the same way and also with an increasing depth limit from a depth of 2 up to the user defined maximum initial depth. This gives us a diverse initial population of trees of varying shapes and sizes.
+In order to obtain a full population that can be tested and evolved we must randomly generate an initial population of RNG trees. These trees as discussed are to be represented in a prefix expression so that they can be easily stored in a character array but interpreted and manipulated as trees. The following ``generate\_initial\_pop" method is called at the beginning of the programs execution. As discussed earlier and in \cite[p.11-14]{introgp}, Koza suggests the use of the ``\emph{ramped half and half}" method. This meaning that half of the trees are created as full trees (right up to the depth limit) and the other half as grow trees (terminals are added in randomly and not just at the depth limit). I implemented my initial population function in the same way, and also with an increasing depth limit from a depth of 2 up to the user defined maximum initial depth. This gives us a diverse initial population of trees of varying shapes and sizes.
 
-The following generate\_initial\_pop method controls the parameters for the tree types. The full integer is equal to the population member number modulus 2. This means that it alternates between 0 and 1, and therefore indicating whether the tree should be made using the grow or full method to the create\_tree function. The depth integer controls the depth limit of the trees created. This process is partitioned into groups of different tree depths;
+The following ``generate\_initial\_pop" method controls the parameters for the tree types. The ``full" variable is equal to the population member number modulus 2. This means that it alternates between 0 and 1, and therefore indicating  to the ``create\_tree" function whether the tree should be made using the grow or full method. The depth integer controls the depth limit of the trees created. This process is partitioned into groups of different tree depths;
 \begin{lstlisting}[language=C]
 void generate_initial_pop() { 
   struct population_member *progp = population;
@@ -1272,7 +1272,7 @@ void generate_initial_pop() {
 }
 \end{lstlisting}
 
-In this method, the population is enumerated with trees by calling the create\_tree method. The type and depth of the trees are controlled in this method, but the tree/RNG code is created in the create\_tree method. The implementation of this method can be seen below. If the depth is 1 then then a terminal must be added, and if the value is R then this is replaced with a random integer constant from the set \{0, 1, 2, 3\} and is then added to the tree code. Otherwise, as discussed above, depending on the value of the full integer the token is chosen from the set of functions (if it is full) or from the set of both functions and terminals. Branches are then recursively created depending on the arity of the chosen node value. This is done with decreasing depth, as to eventually reach the depth of 1 where terminals are added instead of functions.
+In this method, the population is enumerated with trees by calling the ``create\_tree" method. The type and depth of the trees are controlled in this method, but the tree/RNG code is created in the ``create\_tree" method. The implementation of this method can be seen below. If the depth is 1 then then a terminal must be added, and if the value is R then this is replaced with a random integer constant from the set \{0, 1, 2, 3\} and is then added to the tree code. Otherwise, as discussed above, depending on the value of the full integer, the token is chosen from the set of functions (if it is full) or from the set of both functions and terminals (if it is grow). Branches are then recursively created depending on the arity of the chosen node value. This is done with decreasing depth, as to eventually reach the depth of 1 where terminals are added instead of functions.
 
 \begin{lstlisting}[language=C]
 char *create_tree(char *tree, int depth, int full) { 
@@ -1302,7 +1302,7 @@ char *create_tree(char *tree, int depth, int full) {
 
 From these functions, I was able to obtain an inital population. I used print statements during development of these functions in order to see that the trees being created were in fact correct and diverse.
 \subsubsection{Evaluating Trees}
-After implementing the functions that generate a random initial population, the next phase (referring to the flow chart in figure \ref{simpleflow} on page \pageref{simpleflow}) was to write a method to evaluate / calculate the output of these tree's. Taking the algorithm from the design section I was able to implement the following method for recursively conducting a pre-order traversal of the RNG expressions, applying the operations at the functions in the branches to the terminals that are returned at the leaf nodes of the tree;
+After implementing the functions that generate a random initial population, the next phase (referring to the flow chart in figure \ref{simpleflow} on page \pageref{simpleflow}) was to write a method to evaluate/calculate the output of these trees. Taking the algorithm from the design section I was able to implement the following method for recursively conducting a pre-order traversal of the RNG expressions, applying the operations present in the functions to the terminals that are returned at the leaf nodes of the tree;
 
 \begin{lstlisting}[language=C]
 long calculate_tree_output() {
@@ -1320,20 +1320,20 @@ long calculate_tree_output() {
 }
 \end{lstlisting}
 
-During implementation, for my protected mod (and division) functions I was returning the following statement (if $dom$ is not equal to 0); 
+Previously my protected mod (and division) functions were returning the following statement (if $dom$ is not equal to 0); 
 
 \begin{lstlisting}[language=C]
 return (num%dom);
 \end{lstlisting}
 
-On some runs I was getting an Integer overflow error. At the time I was using integers. I changed them to the long data type, and noticed I was still getting the same error on occasion but still for Integers. Upon some research I found that if both values (despite being longs) are not casted as them, then C will conduct Integer arithmetic operations on them regardless. I then changed the return statements to;
+During implementation, on some runs I was observing an Integer overflow error. I changed the types from int to the long data type, and noticed I was still getting the same error on occasion but still for Integers. Upon some research I found that if both values (despite being longs) are not casted as them, then C will conduct Integer arithmetic operations on them regardless. I then changed the return statements to;
 
 \begin{lstlisting}[language=C]
 return ((long)num%(long)dom);
 \end{lstlisting}
 \noindent and haven't since had the error message.
 
-The method which calls this method does so by cycling through the sequence J from 1 to 16834. The current\_j variable above is a global integer variable which is set by this higher up method. The output from the calculate\_tree\_output method populates that individuals binary output array by using the modulus function seen below;
+The method which calls this method does so by cycling through the sequence J from 1 to 16834. The ``current\_j" variable above is a global integer variable which is set by this higher up method. The output from the ``calculate\_tree\_output" method populates that individuals binary output array by using the modulus function seen below;
 
 \begin{lstlisting}[language=C]
 long output_for_j = calculate_tree_output();
@@ -1344,15 +1344,15 @@ else
    progp->output[x] = '1';
 \end{lstlisting}
 
-This process is repeated for every integer in the sequence of 1 to 16834 and for every member of the population. After this has been done, every member of the population will have it's own corresponding output sequence, ready for it's entropy / fitness to be calculated. 
+This process is repeated for every integer in the sequence of 1 to 16834 and for every member of the population. After this has been done, every member of the population will have it's own corresponding output sequence, ready for it's entropy/fitness to be calculated. 
 \subsubsection{Fitness Function}
-In this section I show the transition I made from the pseudo code definition of the fitness function in the design section into a method that is used to assess the entropy and therefore fitness of each member of the population. To recap, the equation below is used in order to calculate the entropy of a binary sequence for subsequences of length 1 to $N_{max}$;
+In this section I show the transition I made from the pseudo code definition of the fitness function in the design section, into a method that is used to assess the entropy and therefore fitness of each member of the population. To recap, the equation below is used in order to calculate the entropy of a binary sequence for subsequences of length 1 to $N_{max}$;
 
 \begin{equation*}
 E_{total} = \sum_{h = 1}^{N_{max}} \left[ - \sum_{j} P_{(hj)}\ \log_2\ P_{(hj)} \right]
 \end{equation*}
 
-Therefore to implement this in code the method should first cycle through all subsequences of length 1 to $N_{max}$ and count their occurrences in the binary sequence. This is done using the KMP\footnote{Knuth Morris Pratt - finite automaton based pattern matching} pattern matching algorithm. As discussed in the revised design, I replaced the initial brute force pattern matching algorithm in order to make the fitness function more efficient. The algorithm is called like so, where j2 is the padded\footnote{Including preceding zeros} binary subsequence to be searched for (i.e. the pattern), and bit\_seq is the binary output of the current program;
+Therefore to implement this in code the method should first cycle through all subsequences of length 1 to $N_{max}$ and count their occurrences in the binary sequence. This is done using the KMP\footnote{Knuth Morris Pratt - finite automaton based pattern matching} pattern matching algorithm. As discussed in the revised design, I replaced the initial brute force pattern matching algorithm in order to make the fitness function more efficient. The algorithm is called like so, where ``j2" is the padded\footnote{Including preceding zeros} binary subsequence to be searched for (i.e. the pattern), and ``bit\_seq" is the binary output of the current program;
 \begin{lstlisting}[language=C]
 occurrence = KMP_matching(j2, bit_seq);
 \end{lstlisting}
@@ -1364,7 +1364,7 @@ array_count++;
 total_occ += occurrence;
 \end{lstlisting}
 
-Once this has been done for every binary subsequence of lengths 1 to H\_MAX (In our case defined as 7), then we can calculate the scalar entropy for each specific subsequence length. In the part of the fitness function below, the probabilities of occurrence of each subsequence are calculated by dividing the occurrence of that subsequence by the total occurrence for that length. The inner section of the equation above is then calculated and the scalar entropy for that length is then incremented by the entropy for that specific binary subsequence. This process is repeated for every element of ocurrence\_array (i.e. every subsequence of that length) and then this is repeated for every length to obtain all the scalar entropies;
+Once this has been done for every binary subsequence of lengths 1 to H\_MAX (In our case defined as 7), then we can calculate the scalar entropy for each specific subsequence length. In the part of the fitness function below, the probabilities of occurrence of each subsequence are calculated by dividing the occurrence of that subsequence by the total occurrence for that length. The inner section of the equation above is then calculated and the scalar entropy for that length is then incremented by the entropy for that specific binary subsequence. This process is repeated for every element of ``ocurrence\_array" (i.e. every subsequence of that length) and is then repeated for every length to obtain all the scalar entropies;
 
 \begin{lstlisting}[language=C]
 for (int z = 0; z < array_count; z++) {
@@ -1386,10 +1386,10 @@ for (int z = 0; z < array_count; z++) {
 
 The scalar entropies are then copied over to the scalar array of that program and then summed to obtain the full entropy/fitness value. This process of assessing the fitness is repeated for every program in the population.
 
-When I first implemented the fitness function, I noticed I was not achieving the desired fitness levels. I initially thought that it was down to a bad population. I then used the prefix expression that Koza provides as his fittest solution in \cite{kozarng} as a test case, with a known fitness of 27.996 bits. I noticed that was only achieving around 15 bits of entropy. From this I knew that it was down to either the evaluation method or some component of the fitness function. I then realised that I was overlooking binary subsequence patterns with preceding zeros, (i.e. For length 2 for example I was checking the occurrences of 0, 1, 10, and 11 when in fact I should have been checking the occurrences of 00, 01, 10 and 11). Once I noticed this, I implemented a method that added the correct number of preceding zeros to each sequence. I then tested Koza's solution again and got exactly the same entropy as he did. I knew then that my fitness function was correct.
+When I first implemented the fitness function, I noticed I was not achieving the desired fitness levels. I initially thought that it was down to a bad population. I then used the prefix expression that Koza provides as his fittest solution in \cite{kozarng} as a test case, with a known fitness of 27.996 bits. I noticed that was only achieving around 15 bits of entropy. From this I knew that it was down to either the evaluation method or some component of the fitness function. I then realised that I was overlooking binary subsequence patterns with preceding zeros, (i.e. For length 2 for example I was checking the occurrences of 0, 1, 10, and 11 when in fact I should have been checking the occurrences of 00, 01, 10 and 11). Once I noticed this, I implemented a method that added the correct number of preceding zeros to each subsequence. I then tested Koza's solution again and got exactly the same entropy as he did. I knew then that my fitness function was correct.
 
 \subsubsection{Evolution}
-For the GP implementation the only evolutionary operator I used is genetic crossover. As I Koza discussed in \cite{kozarng} and I described in the design section, for selection, we use FPR (Fitness Proportionate Reproduction) and then the rest uses equal selection with one parent selected based on their fitness. The balance between the two is defined by the user (as a definition in the code).
+For the GP implementation the only evolutionary operator I used is genetic crossover. As Koza discussed in \cite{kozarng}, and what I described in the design section, for selection, we use FPR (Fitness Proportionate Reproduction) and then the remaining population uses equal selection with one parent selected based on their fitness. The balance between the two is defined by the user (as a definition in the code).
 
 For FPR, the fitnesses of the population are summed and then a random number is chosen in the sums range;
 \begin{lstlisting}[language=C]
@@ -1398,7 +1398,7 @@ double total_select = fitness_sum + POP_SIZE;
 double selection = ( (double)rand() * total_select ) / (double)RAND_MAX;
 \end{lstlisting}
 
-The population fitnesses are then summed until the random number falls in between the current nodes fitness. Thus giving fitter members a greater chance of being selected. Below, the ineteger s is the index in the population array of the member chosen.
+The population fitnesses are then summed until the random number falls in between the current nodes fitness. Thus giving fitter members a greater chance of being selected. Below, the ineteger ``s" is the index in the population array of the member chosen.
 
 \begin{lstlisting}[language=C]
 int fpr_selection() {
@@ -1454,12 +1454,12 @@ This method is then called for both parents in order to select crossover points.
 Now that I have implemented the selection of the parents and the nodes within each of those parents, the next step is to create two child programs from them.
 The code for creating the two children from the parents can be found in the appendix. It is a simple case of copying over the code from the two selected points into two new char arrays, but is long winded. This process is then repeated for a total of half the size of the population (each reproduction produces two child programs).
 
-The main method of the program controls the calling and amalgamation of all the methods mentioned above. The main method repeats the process of evolving the population until the terminating criteria is met (entropy threshold reached or max number of generations reached). This is then repeated some number of times defined by the user, for conducting more runs and gathering larger amounts of data for testing purposes. The main method also implements a clock function which records the amount of time each run and generation takes. All of the information is written to multiple and individual run log files. Other (non major) methods and the rest of the code can be found in the appendix at the end of this document. 
+The main method of the program controls the calling and amalgamation of all the methods mentioned above. The main method repeats the process of evolving the population until the terminating criteria is met (entropy threshold reached or max number of generations reached). This is then repeated some number of times defined by the user, for conducting more runs and gathering larger amounts of data for evaluation purposes. The main method also implements a clock function which records the amount of time each run and generation takes. All of the information is written to multiple and individual run log files. Other (non major) methods and the rest of the code can be found in the appendix at the end of this document. 
 
 
 
 \subsubsection{Conclusion}
-At the end of the GP implementation I had obtained a working command line based Genetic Program which evolves RNGs. It is adaptive to experimentation as all parameters of the run can be altered in the code and data from each run describing each generation is written to log files on the hard drive. Having completed this, I now had a strong basis for beginning the SNGP implementation and for collecting data about the GP performance for later evaluation. Figure \ref{gpss} shows a screen shot of the GP running in the command line;
+At the end of the GP implementation I had obtained a working command line based Genetic Program which evolves RNGs. It is adaptive to experimentation as all parameters of the run can be altered in the code, and data from each run describing each generation is written to log files on the hard drive. Having completed this, I then had a strong basis for beginning the SNGP implementation, and for collecting data about the GP performance for later evaluation. Figure \ref{gpss} shows a screen shot of the GP running in the command line;
 
 \begin{figure}[H]
 \centering
@@ -1470,7 +1470,7 @@ At the end of the GP implementation I had obtained a working command line based 
 
 
 \subsection{SNGP Implementation}
-In this section I shall cover the process of implementing the SNGP paradigm of genetically breeding a RNG. As the aim of the completed program is to search for optimal RNGs in the same way as the GP implementation, a lot of the methods are the same including the fitness function. What differs between the two implementations is that SNGP handles a graph population instead of separated trees, and evolves and evaluates them using dynamic programming.
+In this section I shall cover the process of implementing the SNGP paradigm of genetically breeding a RNG. As the aim of the completed program is to search for optimal RNGs in the same way as the GP implementation, a lot of the methods are the same, including the fitness function. What differs between the two implementations is that SNGP handles a graph population instead of separated trees, and evolves and evaluates them using dynamic programming.
 
 \subsubsection{Main Data Structures}
  In the design section and in \cite[p.50-51]{jacksonsngp2} Jackson describes the SNGP model in the following way;
@@ -1485,7 +1485,7 @@ Each member $m_i$ is a tuple;
 m_i = \ <u_i,\ r_i,\ S_i,\ P_i,\ O_i>
 \end{equation*}
 
-I implemented these tuples as structs in C. Here we can see how each node is described as a struct in C for the SNGP implementation.
+I implemented these tuples as structs in C. Here we can see how each node is described as a struct in C for the SNGP implementation;
 
 \begin{lstlisting}[language=C]
 struct population_member {
@@ -1501,7 +1501,7 @@ struct population_member {
 };
 \end{lstlisting}
 
-As each of these structs represents a node in a graph population, information on the nodes position is needed. Therefore I added some extra data from the GP struct. The depth of the node is important for evolution purposes, as to ensure that nodes cannot mutate to other nodes higher up or equal to the depth they are at (this could cause a cycle in the graph leading to infinite trees being created). Each node can have any number (up to POP\_SIZE - 1) of predecessors, therefore the pred integer array stores the index of these predecessors. This is later used for creating update lists after evolution. Each function has two successors, the index of which are stored as integers in the struct. The decimal output vector is also needed in order to conduct dynamic calculations during evaluation.
+As each of these structs represents a node in a graph population, information on the nodes position is needed. Therefore I added some extra data from the GP struct. The depth of the node is important for evolution purposes, as to ensure that nodes cannot mutate to other nodes higher up or equal to the depth they are at (this could cause a cycle in the graph leading to infinite trees being created). Each node can have any number (up to POP\_SIZE $-\ |T|)$, if it's a terminal node) of predecessors, therefore the pred integer array stores the index of these predecessors. This is later used for creating update lists after evolution. Each function has two successors, the index of which are stored as integers in the struct. The decimal output vector is also needed in order to conduct dynamic calculations during evaluation.
 
 A graph of these struct descriptions of the nodes is formed by creating a larger struct to embody them all;
 
@@ -1554,7 +1554,7 @@ case '*':
 This process is repeated for any new node added to the graph population during it's initialisation. However, as we will see below, in later generations when the graph is updated after a mutation, not every node needs to be updated.
 
 \subsubsection{Successor Mutation /  Evolution}
-The only evolutionary operator I used in the SNGP implementation (and described by Jackson on \cite{jacksonsngp}) is successor mutation or $smut$. A node is chosen at random (minus the terminals), and one of it's successors is mutated to some other node in the graph (still at a lower depth). The implementation of this function was relatively simple as it purely relies on random selection and updating of the nodes involved.;
+The only evolutionary operator I used in the SNGP implementation (and described by Jackson on \cite{jacksonsngp}) is successor mutation or $smut$. A node is chosen at random (minus the terminals), and one of it's successors is mutated to some other node in the graph (still at a lower depth). The implementation of this function was relatively simple as it purely relies on random selection and updating of the nodes involved;
 
 
 \begin{lstlisting}[language=C]
@@ -1581,7 +1581,7 @@ if (left->depth >= right->depth)
 		mut_node->depth = right->depth + 1;
 \end{lstlisting}
 
-The tricky part was to create an update list. After the successor mutation operation, the only nodes that need to be updated are the ones which are it's predecessors and the predecessors. Therefore I needed to create a recursive algorithm that backtracked through the graph in order to create an update list.
+The tricky part was to create an update list. After the successor mutation operation, the only nodes that need to be updated are the ones which are it's predecessors (parents, grandparents, etc.). Therefore I needed to create a recursive algorithm that backtracked through the graph in order to create an update list.
 
 First I wrote the following method to initialise the update list;
 
@@ -1616,9 +1616,9 @@ After implementing this I had complete code for running one generation. The rate
 \subsubsection{Other Methods and Conclusion}
 During implementation I experimented with various combinations of driving factors. In SNGP the most effective climbing approach I found was to drive on either the increase of the total population fitness or on the fittest members fitness increase;
 \begin{lstlisting}[language=C]
-if (best_fitness_old >= best_fitness && total_pop_fitness_old >= total_pop_fitness)
-{
- //Then throw away new graph population after mutation
+if (best_fitness_old >= best_fitness && total_pop_fitness_old >= total_pop_fitness) {
+ //Then throw away new graph population after mutation as neither the best fitness
+ //or the total population fitness have increased.
 }
 \end{lstlisting}
 
@@ -1636,9 +1636,9 @@ Having completed these tasks, I had a fully operating SNGP solution ready for te
 \end{figure}
 
 \subsection{C $rand()$ and TRNG Test Program Implementation}
-Having implemented both the GP and SNGP paradigms ready for being run and to have data collected, the next and final implementation stage was to write a piece of software in C that would test both the C RNG and the TRNG in the same way that the RNG trees are tested in GP and SNGP.
+Having implemented both the GP and SNGP paradigms, the next and final implementation stage was to write a piece of software in C that would test both the C RNG and the TRNG in the same way that the RNG trees are tested in GP and SNGP.
 
-I set out knowing that the fitness function from the GP and SNGP implementations would need to be used identically. Therefore all I needed to do for both the C $rand()$ function and the TRNG at random.org was to collect their binary outputs and populate an array of length 16834. This array can then be tested in the same way in order to produce a fair test.
+I set out knowing that the fitness function from the GP and SNGP implementations would need to be used identically. Therefore all I needed to do for both the C $rand()$ function and the TRNG at random.org was to collect their binary outputs and populate an array of length 16834. This array could then be tested in the same way in order to produce a fair test.
 \subsubsection{C $rand()$}
 I began by implementing some user definitions. When the program is executed, the user is prompted to decide which method should be assessed. If `c' is pressed then the user is again prompted for the number of runs they would like to conduct. This was implemented using simple $getch()$ and $scanf()$ method calls (i.e. get char). Once I had this working, the following method is called;
 
@@ -1654,7 +1654,7 @@ void get_c_rand_seq() {
 }
 \end{lstlisting}
 
-Here I took the remainder of dividing the output of the C $rand()$ function by 2 (mod function, so output is 0 or 1), and populated the bit\_seq character array.
+Here I took the remainder of dividing the output of the C $rand()$ function by 2 (mod function, so output is 0 or 1), and populated the ``bit\_seq" character array.
 
 This bit sequence is then assessed using the Shannon entropy equation (from the fitness function) and the program outputs the average (from the user defined number of runs) entropy value and percentage on screen, out of 28 bits (or the max entropy for the defined H\_MAX). The run information, consisting of the run number and scalar entropy breakdowns, are then saved into a log file on the hard disk so that it can be used for evaluation purposes.
 
@@ -1682,9 +1682,9 @@ void download_bits() {
 }
 \end{lstlisting}
 
-In the HTTP request the nbytes varaible is the number of bytes I want to download. As the binary array is 16384 bits long, I want 16384/8 = 2048 bytes. I also want the it to be in bit form (i.e. base 2) and I want it to be text file, hence the format parameter `b' and the final .txt extension are added to the request. 
+In the HTTP request the ``nbytes" parameter is the number of bytes I want to download. As the binary array is 16384 bits long, I want 16384/8 = 2048 bytes. I also want the it to be in bit form (i.e. base 2) and I want it to be text file, hence the format parameter ``b" and the final ``.txt" extension are added to the request. 
 
-Once the file has been downloaded, the binary data is be read into a char array and then the entropy of the sequence is calculated. The code for reading in from the RandomBits.txt file ca be seen below. 
+Once the file has been downloaded, the binary data is then read into a char array and then the entropy of the sequence is calculated. The code for reading in from the RandomBits.txt file can be seen below. 
 
 \begin{lstlisting}[language=C]
 for (position; position < J; position++) {
@@ -1716,7 +1716,7 @@ A screen shot of the TRNG implementation can be seen below;
 \subsection{Conclusion}
 This concludes the implementation phase of the project. I have now produced three working pieces of software; The Genetic Programming implementation of evolving RNGs, the Single Node Genetic Programming implementation and the implementation of the C RNG, and the random.org TRNG test. All of these implementations output data which shall be collected and used in the evaluation phase of this report.
 
-While there were some hiccups during implementation as can be expected with the development of any piece of software, the process of creating and designing the algorithms and main methods in pseudo code in the design phase was of great use when it came to implementation. I was able to go relatively straight from pseudo code to C code which enabled me to finish all of the implementations a head of schedule (according to the gannt charts presented in all the documents).
+While there were some hiccups during implementation as can be expected with the development of any piece of software, the process of creating and designing the algorithms and main methods in pseudo code in the design phase was of great use when it came to implementation. I was able to go straight from pseudo code to C code which enabled me to finish all of the implementations a head of schedule (according to the gannt charts present in the design document in the appendix).
 
 
 
@@ -1763,18 +1763,18 @@ While there were some hiccups during implementation as can be expected with the 
 
 \subsection{Introduction}
 %- Introduce how evaluation is based on collecting data from running all implementations and then comparing the results. Any part where running time factors into the analysis then AMD Athlon X2 5600+ 2.8GHz Dual core processor used. Explain changes to the test criteria from design document.\\
-The first phase of evaluation is to compare the results I obtained from implementing Koza's method of producing randomisers with the use of Genetic Programming. By looking at the data he obtained and what I obtained, we should be able to paint an accurate picture of how well I managed to convey his description in his paper \cite{kozarng}.
+The first phase of evaluation is to compare the results I obtained from implementing Koza's method of producing randomisers using GP and the results Koza managed to obtain himself. By looking at the data he obtained and what I obtained, we should be able to paint an accurate picture of how well I managed to convey his description in his paper \cite{kozarng}.
 
 A major (arguably the most important) part of this project is to evaluate the results produced by both GP and SNGP implementations. The aim is to prove which method of genetically breeding RNGs produces the most solutions in the most efficient manner (with respect to running time and the size of the solutions produced). 50 runs were conducted for both the single threaded GP and SNGP implementations in order to compare averages of their outputs. Runs used for any part of the following analysis where run time is taken into consideration were ran on a machine with an AMD Athlon 64 X2 5600+ 2.8 GHz Dual-Core processor.
 
-The next step of evaluation after that is to compare the RNGs produced by the GP and SNGP paradigms against two other RNGs in wide use today. The C $rand()$ function is a PRNG that uses a Linear Congruential Generator algorithm in order to give developers who are writing C programs a simple way of generating pseudo random numbers. The Hardware/True Random Number Generator at random.org collects binary data from a radio receiver that reads atmospheric noise produced by unpredictable natural effects such as lightning storms. There is an API available where developers can download ``true" random data from the random.org servers for use in their software\footnote{Please see the implementation section of this document for details on how this is achieved}. The randomness/entropy is tested in the same way for all approaches.
+The next step of evaluation after that is to compare the RNGs produced by the GP and SNGP paradigms against two other RNGs in wide use today. The C $rand()$ function is a PRNG that uses a Linear Congruential Generator algorithm, in order to give developers who are writing C programs a simple way of generating pseudo random numbers. The Hardware/True Random Number Generator at random.org collects binary data from a radio receiver that reads atmospheric noise produced by unpredictable natural effects such as lightning storms. There is an API available where developers can download ``true" random data from the random.org servers for use in their software\footnote{Please see the implementation section of this document for details on how this is achieved}. The randomness/entropy is tested in the same way for all approaches.
 
 Sections of this evaluation have been changed and added since the design document was produced (please see the appendix for the original document). During implementation and initial evaluation, other ways of evaluating the project became apparent to me. I added the evaluation in section \ref{evalofgp} in order to assess how my results compared to the results presented by Koza in \cite{kozarng}. This way I can tell how accurately my implentation was to that proposed in the research paper. I also added the evaluation in section \ref{realimp}, which reviews how well the RNGs produced by Genetic means perform in a real software implementation. The reasoning behind this is that RNGs are frequently used by developers in various programming languages. I wanted to see whether it was practical for developers to use these RNGs produced Genetically in their software, again against the C $rand()$ function.
 
 \subsection{Evaluation of GP Implementation}
 %- Introduce evaluation by comparing first GP results to that of Kozas results. Compare any criteria that Koza proposes in his paper. Then show results and findings.\\
  \label{evalofgp}
-The first stage of implementation as discussed in the Realistion seciton of this document was to follow Koza's Paper \cite{kozarng} in implementing a GP to evolve RNGs in C. To do this, I developed algorithms\footnote{Found in the Design section of this document and in the design document in the appendix} that expressed the processes, equations and design in his paper. The first part of the evaluation is to assess the results that Koza produced against what I managed to acheive from the carbon copy of his implementation.
+The first stage of implementation as discussed in the Realisation seciton of this document was to follow Koza's Paper \cite{kozarng} in implementing a GP to evolve RNGs in C. To do this, I developed algorithms\footnote{Found in the Design section of this document and in the design document in the appendix} that expressed the processes, equations and design in his paper. The first part of the evaluation is to assess the results that Koza produced against what I managed to acheive from the carbon copy of his implementation.
 
 In section 5.1 of \cite[p. 6]{kozarng}, Koza introduces his results from the run of the fittest solution produced by the GP implementation. In this run, Koza managed to produce a randomiser with an entropy of 27.996 bits on the 14th Generation. Koza describes the progression in fitness of the fittest candidate over these 14 generations. In order to make a comparison of one of my runs against Koza's run, I must also select the run that produced the fittest solution produced by my implementation. This run of mine took 10 generations to find a RNG with 27.995032 out of 28 bits of entropy.
 
@@ -1783,11 +1783,11 @@ Despite the lower fitness in generation 0, the progression of the fitness from t
 
 Koza also defined the scalar entropy breakdown of his fittest solution; ``\emph{In scoring 27.996, this randomiser achieved a maximal value of entropy of 1.000, 2.000, 3.000, 4.000, 5.000, and 6.000 bits for sequences of lengths 1, 2, 3, 4, 5, and 6, respectively, and a near-maximal value of 6.996 for the 128 (27) possible sequences of length 7.}" However, our fittest solution was not so uniform in breakdown. Instead it achieved maximal entropy of 1.000000 bits for sequences of length 1 and then 1.999935, 2.999866, 3.999688, 4.999333, 5.998764, 6.997446 bits for sequences of lengths 2, 3, 4, 5, 6, and 7 respectively. Therefore our solution here is slightly better at randomising sequences of length 7 bits, the same for length 1 bits, but slightly worse for 2, 3, 4, 5, 6 bits. Therefore it achieves a slightly lower overall entropy of 27.995 bits against Koza's 27.996 bits, but both remain highly credible randomisers with 99.98\% and 99.99\% entropy respectively. 
 
-Coincidentally, the solution that I produced was not only the fittest but was also the quickest to find and had the smallest size over the 50 runs. It has only 15 points against Koza's 153 points, and as discussed above it took only 10 generations to find (434.4 sec). The prefix expression can be seen below;
+Coincidentally, the solution that I produced was not only the fittest but was also the quickest to find and had the smallest size over the 50 runs. It has only 15 points against Koza's 153 points, and as discussed above, took only 10 generations to find (434.4 sec). The prefix expression can be seen below;
 \begin{center}
 /\ -\ 2\ -\ 2\ J\ \%\ J\ -\ 2\ /\ /\ J\ 3\ 3
 \end{center}
-However the coincidence ends here. The average size of the solutions produced by our GP implementation is 154.6 points, very close to the 153 points in Koza's fittest candidate\footnote{Koza does not provide any average data or information for solution sizes.}
+However the coincidence ends here. The average size of the solutions produced by our GP implementation (across 50 runs) is 154.6 points, very close to the 153 points in Koza's fittest candidate\footnote{Koza does not provide any average data or information for solution sizes.}
 Here we have shown that using one run from both Koza's research in \cite{kozarng} and from the results that I have obtained by replicating his research, that the execution behaviour and the results are very similar.
 
 
@@ -1821,7 +1821,7 @@ Now that we have defined the parameters, the data from 50 runs of the GP and SNG
 In order to correctly evaluate GP vs SNGP using this newly aquired data, we must first define the criteria which will determine the victor. The aim of any Genetic Program or Genetic Algorithm is to act as a search heuristic in order to find an optimal solution. Therefore like with any search algorithm, the desired characteristics are that it will produce a high rate of optimal solutions in an efficient manner. Applied directly to Evolutionary Algorithms, this corresponds to a process which produces the highest rate of short, highly fit solutions in the quickest time possible.
 
 \subsubsection{Single Run Example}
-Let's first introduce an example of a single run of both the SNGP and GP implementations that both managed to reach the termination entropy. In figure \ref{examplegrapha} below we can see already that in this instance SNGP has a more accelerated fitness progression and has a much shorter execution time;
+Let's first introduce an example of a single run of both the SNGP and GP implementations that both managed to reach the termination entropy. In figure \ref{examplegrapha} below, we can see already that in this instance SNGP has a more accelerated fitness progression and has a much shorter execution time;
 
 \begin{figure}[H]
 \centering
@@ -1849,7 +1849,7 @@ Let's first introduce an example of a single run of both the SNGP and GP impleme
 \label{examplegrapha}
 \end{figure}
 
-The fluctuation in entropy across the whole run is much less in SNGP than it is in GP. This is reflected when we show the scalar entropy breakdown for the same runs as seen below in figures \ref{sngpscalar} and \ref{gpscalar} below. We can see that the SNGP entropy rises in more uniform steps across all 1 - 7 bits, whereas GP fluctuates more aggressively. 
+The fluctuation in entropy across the whole run is much less in SNGP than it is in GP. This is reflected when we show the scalar entropy breakdown for the same runs as seen in figures \ref{sngpscalar} and \ref{gpscalar} below. We can see that the SNGP entropy rises in more uniform steps across all 1 - 7 bits, whereas GP fluctuates more aggressively. 
 \begin{figure}[H]
 \centering
 \begin{minipage}{.5\textwidth}
@@ -1939,7 +1939,7 @@ After 50 runs of both implementations under standard parameters, the following a
 \end{table}
 SNGP comes out victorious on all tests bar the Average Solution Fitness (which is only beaten by 0.00076\% entropy). Over the 50 runs, SNGP finds over twice as many solutions, in under a quarter of the time. The solutions found are also on average 5 ${1} \over {2}$ times smaller due to the fact that branches in the trees are repeated (and can be calculated dynamically).
 
-In \cite[p.54]{jacksonsngp} Jackson defines that the number of attempted $smut$ operations should be based on the number of individuals that would be processed in a traditional GP implementation. This is calculated by taking the product of the max number of generations\footnote{Not including the initial generation} and the size of the population. Therefore for our corresponding SNGP implementation this should be; $50*500 = 25000$. However Jackson also goes onto say in \cite[p.58]{jacksonsngp} ``\emph{these can be manipulated to tune the solution rate, solution sizes, and speed of solution discovery}". Therefore for the 50 runs I conducted for SNGP, I reduced the $smut$ attempts in order to show both a higher solution rate and a quicker running time. I did this by reducing the parameter from 25000 to 2500 attempts. Table \ref{25000} shows 10 runs with the $smut$ attempts set to 25000, and it shows that a 100\% solution rate can be achieved by doing so. However, taking a look back at our 50 runs, reducing this parameter by a $10^{th}$ did not reduce the solution rate by the same amount. In fact we can say therefore that on average 88\% of solutions are found within the first 2500 $smut$ attempts.
+In \cite[p.54]{jacksonsngp} Jackson defines that the number of attempted $smut$ operations should be based on the number of individuals that would be processed in a traditional GP implementation. This is calculated by taking the product of the max number of generations\footnote{Not including the initial generation} and the size of the population. Therefore for our corresponding SNGP implementation this should be; $50*500 = 25000$. However Jackson also goes onto say in \cite[p.58]{jacksonsngp} ``\emph{these can be manipulated to tune the solution rate, solution sizes, and speed of solution discovery}". Therefore for the 50 runs I conducted for SNGP, I reduced the $smut$ attempts in order to show both a higher solution rate and a quicker running time. I did this by reducing the parameter from 25000 to 2500 attempts. Table \ref{25000} shows 10 runs with the $smut$ attempts set to 25000, and it shows that a 100\% solution rate can be achieved by doing so. However, taking a look back at our 50 runs, reducing this parameter by a $10^{th}$ did not reduce the solution rate by the same amount. In fact we can say therefore (loosely) that on average 88\% of solutions are found within the first 2500 $smut$ attempts.
 
 %Add fiugure mentioned above here.
 \begin{table}[H]
@@ -1961,9 +1961,9 @@ In \cite[p.54]{jacksonsngp} Jackson defines that the number of attempted $smut$ 
 
 By increasing the number of $smut$ attempts from 2500 to 25000 we have obtained a 100\% solution rate but at the expense of having an average solution run time close to that of the GP average solution run time.
 
-Therefore we can also say that using 2 independent runs (which can be run in parallel) of the SNGP paradigm given 2500 $smut$ attempts and given a success probability of $p_s = 0.88$, using simple probabilities, the chance of success over those two runs is equal to $1 - (1 - 0.88)^{2} = 0.9856$ or 98.56\%.  Therefore with a reduced $smut$ attempt parameter we can achieve a probability of success close to that of 100\%\footnote{Getting close but never quite 100\% due to the limit of the function ($\lim_{x \to \infty} 1 - (1 - 0.88)^{x} = 1$)} and benefit from a reduced amount of computation time.
+Therefore we can also say that using 2 independent runs (which can be run in parallel) of the SNGP paradigm given 2500 $smut$ attempts and given a success probability of $p_s = 0.88$. That using simple probabilities, the chance of success over those two runs is equal to $1 - (1 - 0.88)^{2} = 0.9856$ or 98.56\%.  Therefore with a reduced $smut$ attempt parameter we can achieve a probability of success close to that of 100\%\footnote{Getting close but never quite 100\% due to the limit of the function ($\lim_{x \to \infty} 1 - (1 - 0.88)^{x} = 1$)} and benefit from a reduced amount of computation time.
 
-By taking all 50 runs of each implementation (solutions and non-solutions), we can gain further insight into the relation between solution size, run time and entropy. To do this we can generate 3D surface plots from the data. In figures \ref{gpsurf} and \ref{sngpsurf} below we can see the correlation between solution size, fitness and run time for all 50 runs of both the GP and SNGP implementations respectively. As runs are independent to one another, so interpolation was required in order to create a surface in Matlab;
+By taking all 50 runs of each implementation (solutions and non-solutions), we can gain further insight into the relation between solution size, run time and entropy. To do this we can generate 3D surface plots from the data. In figures \ref{gpsurf} and \ref{sngpsurf} below we can see the correlation between solution size, fitness and run time for all 50 runs of both the GP and SNGP implementations respectively. As runs are independent to one another, interpolation was required in order to create a surface in Matlab;
 
 \begin{figure}[H]
 \centering
@@ -2020,7 +2020,7 @@ We can conclude that for the purposes of producing RNGs by genetic means, that S
 
 \newpage
 \subsection{Parameter Altering Experimentation: Reducing Population Sizes}
-In this section we take a look at the effects of altering the population size of the GP and SNGP implementations, in order to see what effect different conditions have on their performance. On \cite[p.56]{jacksonsngp} Jackson experiments with the effects of reducing the population size on the solution rate of his 6-mux SNGP implementation. In section \ref{gpvssngp} we take a look at increasing the number $smut$ attempts on the performance of the SNGP model. In figures \ref{sngpreduceda} and \ref{gpreduceda} below we can see the effects of a reduced population on the rate of solutions produced by both methodologies. For SNGP I gathered data from 10 runs at each of the following 20\% population size decrements (and a final 10\% decrement) \{100, 80, 60, 40, 20, 10\}. I gathered the same data from the GP implementation for the populaiton size decrements of \{500, 400, 300, 200, 100, 50\}. The results I obtained can be seen below;
+In this section we take a look at the effects of altering the population size of the GP and SNGP implementations, in order to see what effect different conditions have on their performance. In \cite[p.56]{jacksonsngp} Jackson experiments with the effects of reducing the population size on the solution rate of his 6-mux SNGP implementation. In section \ref{gpvssngp} we took a look at increasing the number $smut$ attempts on the performance of the SNGP model. In figures \ref{sngpreduceda} and \ref{gpreduceda} below we can see the effects of a reduced population on the rate of solutions produced by both methodologies. For SNGP, I gathered data from 10 runs at each of the following 20\% population size decrements (and a final 10\% decrement) \{100, 80, 60, 40, 20, 10\}. I gathered the same data from the GP implementation for the populaiton size decrements of \{500, 400, 300, 200, 100, 50\}. The results I obtained can be seen below;
 
 
 \begin{figure}[H]
@@ -2060,7 +2060,7 @@ enlarge x limits=false,]
 
 \end{figure}
 
-It seems that for both implementations, the solution rate stays relatively the same (bar the 20\% anomaly for size 300 in GP) until after the population size is set lower than the average size of solutions for the 50 runs as discussed earlier. For GP the average size of solutions 156.4 and the solution rate becomes 0\% after the population size is set to less than or equal to 100. For SNGP the average size of solutions is 27.9, and the solution rate for SNGP is reduced to 0\% when the population size is set less than or equal to 10.
+It seems that for both implementations, the solution rate decreases slowly (bar the 20\% anomaly for size 300 in GP) until after the population size is set lower than the average size of solutions for the 50 runs as discussed earlier. For GP, lowering the population size past 100 appears to limit the diversity of the population so far that solutions can no longer be genetically bred. For SNGP the average size of solutions is 27.9, and the solution rate for SNGP is reduced to 0\% when the population size is set less than or equal to 10. We can see that by limiting population sizes, we limit the diversity of the population and therefore the number of solutions that are available to us.
 
 In figures \ref{sngprun} and \ref{gprun} below, we can also see the reduction in average running time of both the SNGP and GP implementations when the population size is lowered respectively;
 
@@ -2102,7 +2102,7 @@ enlarge x limits=false,]
 
 In figure \ref{gprun} above we see the expected reduction in run time as we reduce the population size. This is because the number of individuals being processed is being reduced and therefore the number of trees that must be evaluated and tested for fitness is also reduced. However in figure \ref{sngprun} above we see that the average computation time actually rises from 606 to 868 seconds when the population size is reduced from 100 to 80, and doesn't actually drop back below 606 seconds until a population of size 40. This can be seen as an anomaly (as only 10 runs were taken for each population size). However it could be reasoned that we know (from our 50 runs in figure \ref{50average} on page \pageref{50average}) that runs that fail to find a solution take on average 3.5 ($1701.1 / 483.2 = 3.521$) times longer to find a terminate than those that do. Therefore if the solution rate drops from 88\% to 80\%, this will have a knock on effect to the average running time for not finding solutions (minus the reduced running time for processing less individuals). For instance, when the solution rate levels off at 60\% between 40 and 20 the run time decreases, as a reduced population size with the same solution rate will definitely incur a reduced run time.
 
-Here we have shown that a reduced population size can reduce the run time both implementations whilst still yielding an acceptable solution rate. However we have also shown that (in the case of SNGP) a reduced population size that reduces the solution rate can lead to non solution times having a more aggressive effect on the average run time than the reduction in time that having less individuals to process does.
+Here we have shown that a reduced population size can reduce the run time of both implementations whilst still yielding an acceptable solution rate. However we have also shown that (in the case of SNGP), a reduced population size that reduces the solution rate, can lead to non solution times having a more aggressive effect on the average run time, than the reduction in time that having less individuals to process does.
 
 \subsection{Genetic vs Conventional RNGs}
 
@@ -2125,7 +2125,7 @@ $X_0, 0 \leq X_0 < m$ - the seed
 
 As shown in \cite{lcghack}, LCGs are vulnerable to attack. In the paper it is shown that the variable $m$ in the equation above can be calculated given only 3 outputs due to how LCG outputs commonly fall into 3 dimensional planes. A possibility with using RNGs that are evolved genetically, is that their formula would not be widely known and the formula itself can be updated periodically by the implementer by generating new RNGs.
 
-For the other comparable RNG, I chose a Hardware / True Random Number Generator. This way we can compare our genetically bred randomisers to a source of non-deterministic random data (i.e. the random values are not the result of some deterministic algorithm or equation). I chose to specifically use the service provided at random.org, where their servers provide random binary digits generated from observed atmospheric noise on demand. 
+For the other comparable RNG, I chose a Hardware / True Random Number Generator. This way we can compare our genetically bred randomisers to a source of non-deterministic random data (i.e. the random values are not the result of some deterministic algorithm or equation). I chose to specifically use the service provided at random.org \cite{randomorg}, where their servers provide random binary digits generated from observed atmospheric noise on demand. 
 
 We analyse the random data produced by these two methods in the same way as our fitness function in our Genetically bred RNGs. Using the Shannon entropy equation we can gather 16834 bits from the other two RNGs and calculate the entropy for binary subsequences of lengths 1 to 7 bits. This way we can test all of our RNGs fairly under the same conditions and using the same test.
 
@@ -2147,7 +2147,7 @@ I used the data from the 50 runs of our GP and SNGP implementations, and then ra
     \end{tabular}
 \end{table}
 
-From the results shown above we can see that the RNGs produced by Genetic means outperform both the C $rand()$ function and the TRNG in terms of entropy. SNGP produces the candidate with the highest fitness and GP produces the highest average fitness (slightly higher than that of SNGP which also beats the two conventional methods). Whilst the genetic RNGs only beat the conventional methods by a fraction, this small improvement can make all the difference when producing high entropy random digits.
+From the results shown above, we can see that the RNGs produced by Genetic means outperform both the C $rand()$ function and the TRNG in terms of entropy. SNGP produces the candidate with the highest fitness and GP produces the highest average fitness (slightly higher than that of SNGP which also beats the two conventional methods). Whilst the genetic RNGs only beat the conventional methods by a fraction, this small improvement can make all the difference when producing high entropy random digits.
 
 The C $rand()$ function performs the worst out of all four candidates producing both the lowest best run and the lowest average fitness (albeit very marginally to the TRNG). The TRNG then places $3^{rd}$ producing lower average fitness and lower best run fitness than both of our evolutionary methods.
 
@@ -2176,7 +2176,7 @@ The images in figures \ref{cpica}, \ref{trngpica} and \ref{geneticpica} were cre
 \end{minipage}%
 \end{figure}
 
-As we can see the C $rand()$ function displays repetitions at uniform intervals giving rise to verticall patterns (the images are populated with pixels from to left to top right and then repeated down the image) . This shows that numbers are repeated more often as well giving it a lower entropy. The data from random.org has no distinguishable patterns at all, however this does not necessarily correspond to a higher entropy, as numbers may still be repeated just not in a uniform fashion like that of the C $rand()$ function. On close inspection the data / image from the genetic RNG might show a subtle pattern to some viewers eyes. This is in fact what gives rise to its very high entropy; a uniformity in distribution and a lower repetition. As our genetic RNG has the highest entropy, in these 16384 bits/pixels (128x128) every binary subsequence of length 1 to 7 needs to occur with (almost) equal probability. Therefore when the GP and SNGP are genetically "engineering" this through evolution, it causes RNGs to produce some uniformity.
+As we can see the C $rand()$ function displays repetitions at uniform intervals giving rise to verticall patterns (the images are populated with pixels from to left to top right and then repeated down the image). This shows that numbers (binary sequences) are repeated at uniform intervals as well as more often (giving rise to lower entropy). The data from random.org has no distinguishable patterns at all, however this does not necessarily correspond to a higher entropy, as numbers may still be repeated just not in a uniform fashion like that of the C $rand()$ function. On close inspection the data/image from the genetic RNG might show a subtle pattern to some viewers eyes. This is in fact what gives rise to its very high entropy; a uniformity in distribution and a lower repetition. As our genetic RNG has the highest entropy, in these 16384 bits/pixels (128x128) every binary subsequence of length 1 to 7 needs to occur with (almost) equal probability. Therefore when the GP and SNGP are genetically ``engineering" this through evolution, it causes RNGs to produce some uniformity.
 
 Below is a graph produced by the random.org servers displaying the shortfall in entropy on the same day on which I collected my test data. As the website provides no specific details on the size and length of bit sequences on which the output from their TRNG is tested, the use of this graph isn't a fair comparison against our other RNGs. However it seems that the average is around 99.96\% to 99.7\% which is close to the results we obtained. As we can see from the graph, as the source of the TRNG is non deterministic, the entropy can fluctuate quite aggressively;
 
@@ -2289,7 +2289,7 @@ Calling the randomiser function 100 times using the same parameters as seen abov
 485  -16  -154 792
 
 \end{lstlisting}
-Using this method, while producing a higher entropy result, is computationally more intensive than the C rand() function. This is because the RNG must be called $n$ times where $n$ is the number of bits required to reach the $max$ value defined by the user. This RNG can easily be parallelised however, so each RNG call can be done in parallel (because we can predict the seed values in advance). As we can see in figure \ref{rngcalls}, the running time of both the C rand() function and our genetically evolved RNG with respect to the number of calls on both are of the same order. However there exists some constant number of operations in our RNG implementation, that causes a longer over all running time. We can also see in figure \ref{rngmax} that over 1000 runs of each input, a higher value has no effect on the c rand() function, as the limit of the number is done with a simple modulus function. With our implementation of the genetically bred RNG, the max input size dictates how many bits we need and therefore how many calls of the RNG we need. Hence a larger max value has an effect on the running time (albeit small). We can conclude therefore that if an implementation of our RNG was desired by a developer, then a higher entropy output would come at the expense of computation time.
+Using this method, while producing a higher entropy result, is computationally more intensive than the C rand() function. This is because the RNG must be called $n$ times where $n$ is the number of bits required to reach the $max$ value defined by the user. This RNG can easily be parallelised however, so each RNG call can be done in parallel (because we can predict the seed values in advance). As we can see in figure \ref{rngcalls}, the running time of both the C rand() function and our genetically evolved RNG with respect to the number of calls on both are of the same order. However there exists some constant number of operations in our RNG implementation, that causes a longer over all running time. We can also see in figure \ref{rngmax} that over 1000 runs of each input, a higher value has no effect on the C $rand()$ function, as the limit of the number is done with a simple modulus function. With our implementation of the genetically bred RNG, the max input size dictates how many bits we need and therefore how many calls of the RNG we need. Hence a larger max value has an effect on the running time (albeit small). We can conclude therefore that if an implementation of our RNG was desired by a developer, then a higher entropy output would come at the expense of computation time.
 
 \begin{figure}[H]
 \centering
@@ -2345,19 +2345,19 @@ Further mathematical operators could be added to the set of functions. By taking
 These operations may lead to larger computation times against the simple mathematic operators used in this project, but they may also lead to fitter solutions.
 
 \section{Learning Points}
-In Summer 2013 after selecting this project I began doing preliminary reading around the areas of Genetic Algorithms and Genetic Programming. Before this time, I had read only briefly around what GP and GAs were capable of solving and their basic structure. I chose this project for two reasons; one because I thought that this was a very interesting application of Genetic Programming, and the second as I wanted to further broaden my knowledge in the area of Computer Science instead of doing a project on something I already had a lot of prior knowledge of. Therefore this project has not only been a success in proving that SNGP is a more effective method for evolving RNGs and Genetic RNGs can perform better than other widely used RNGs, but it has also been a great success in educating me in an area which I also wish to continue to do further research in.
+In Summer 2013 after selecting this project I began doing preliminary reading around the areas of Genetic Algorithms and Genetic Programming. Before this time, I had read only briefly around what GP and GAs were capable of solving and their basic structure. I chose this project for two reasons; one because I thought that this was a very interesting application of Genetic Programming, and the second was because I wanted to further broaden my knowledge in the area of Computer Science instead of doing a project on something I already had a lot of prior knowledge of. Therefore this project has not only been a success in proving that SNGP is a more effective method for evolving RNGs and Genetic RNGs can perform better than other widely used RNGs, but it has also been a great success in educating me in an area which I also wish to continue to do further research in.
 
-Initially I began reading around the area of Genetic Algorithms, crucially using the book ``An Introduction to Genetic Algorithms" by Melaine Mitchell \cite{mitchell}, which gave me a solid introduction into the world of evolutionary computation. I then refined my reading towards Genetic Programming. Whilst \cite{mitchell} covers Genetic Programming breifly in the book, I moved onto a more detailed and focused book entitled ``Genetic Programming. On the Programming of Computers by Means of Natural Selection" by John Koza \cite{kozagpbook}. John Koza is a pioneer of Genetic Programming, and his work on evolving RNGs using Genetic Programming in \cite{kozarng} was the basis for this project (along with Jacksons research on SNGP). From all of this reading and research I gained a solid understanding of the area of Evolutionary Computing and more specifically Genetic Programming.
+Initially I began reading around the area of Genetic Algorithms, crucially using the book ``\emph{An Introduction to Genetic Algorithms}" by Melaine Mitchell \cite{mitchell}, which gave me a solid introduction into the world of evolutionary computation. I then refined my reading towards Genetic Programming. Whilst \cite{mitchell} covers Genetic Programming breifly in the book, I moved onto a more detailed and focused book entitled ``\emph{Genetic Programming. On the Programming of Computers by Means of Natural Selection}" by John Koza \cite{kozagpbook}. John Koza is a pioneer of Genetic Programming, and his work on evolving RNGs using Genetic Programming in \cite{kozarng} was the basis for this project (along with Jacksons research on SNGP). From all of this reading and research I gained a solid understanding of the area of Evolutionary Computing and more specifically Genetic Programming.
 
 % Extensive design is useful
-Having written all of the main algorithms and pseudo-code for the GP and SNGP models in the design section, the process of implementation went much smoother than I had first expected. I spent the majority of the time during implementation simply translating the algorithms from pseuod-code to C code. There were fewer bugs and semantic errors than I had anticipated, and as a result I was able to finish implementation ahead of schedule. From this process I was able to learn that thorough design can save a lot of time during implementation. From past projects (academic and non-academic) where design was not as extensive I had spent longer in the implementation stage. In the future for any projects and research I conduct, I now know that a through design can save me time and make implementation simpler to translate from design to code.
+Having written all of the main algorithms and pseudo-code for the GP and SNGP models in the design section, the process of implementation went much smoother than I had first expected. I spent the majority of the time during implementation simply translating the algorithms from pseudocode to C code. There were fewer bugs and semantic errors than I had anticipated, and as a result I was able to finish implementation ahead of schedule. From this process I was able to learn that thorough design can save a lot of time during implementation. From past projects (academic and non-academic) where design was not as extensive, I had spent longer in the implementation stage. In the future for any projects and research I conduct, I now know that a through design can save me time and make implementation simpler to translate from design to code.
 
 %improved research techniques and analysis of data
-This project has also further improved my skills in research. My ability to use scientific papers related to the work I am conducting in order to further build upon and find new ways of comparing results has vastly improved in the duration of this project. A large section of this project was down to analysing and evaluating the performances of all methods of producing random numbers. My analysis techniques have also been improved during this project, I have developed better approaches to testing thoroughly and well and hope to carry what I have learnt into research projects in the future. 
+This project has also further improved my skills in research. My ability to use scientific papers related to the work I am conducting, in order to further build upon and find new ways of comparing results has vastly improved in the duration of this project. A large section of this project was down to analysing and evaluating the performances of all methods of producing random numbers. My analysis techniques have also been improved during this project, I have developed better approaches to testing thoroughly and well and hope to carry what I have learnt into research projects in the future. 
 
 
 %%Gaining a mathematical of Information theory (Entropy), Improved programming abilities and better C development. Improved LaTeX skills, useful for further research and paper writing.
-From a technical standpoint, I now have a better mathematical understanding of information theory and entropy, and also improved C programming abilities especially when implementing the Shannon entropy equation in the fitness function. I have improved my ability to create efficient algorithms and analysing code for bottle necks (such as identifying the need for the KMP pattern matching algorithm in my fitness function). Seeing as all reports, presentations and documents for this project are written in \LaTeX, my skills with using and coding in the document preparation software have vastly improved. I educated myself in being able to implement all of the graphs (bar the 3D surface plots created in MatLab) that I required for analysis, and I even wrote a small piece of C code in order to covert RNG prefix expressions produced by my GP and SNGP implementations into \LaTeX tikz code for drawing trees. I believe my better understanding and capabilities of using  \LaTeX will be very useful when writing scientific papers or documents in the future.
+From a technical standpoint, I now have a better mathematical understanding of information theory and entropy, and also improved C programming abilities especially when implementing the Shannon entropy equation in the fitness function. I have improved my ability to create efficient algorithms and analysing code for bottle necks (such as identifying the need for the KMP pattern matching algorithm in my fitness function). Seeing as all reports, presentations and documents for this project are written in \LaTeX, my skills with using and coding in the document preparation software have vastly improved. I educated myself in being able to implement all of the graphs (bar the 3D surface plots created in MatLab) that I required for analysis, and I even wrote a small C program in order to covert RNG prefix expressions produced by my GP and SNGP implementations into \LaTeX\ tikz code for drawing trees. I believe my better understanding and capabilities of using  \LaTeX\ will be very useful when writing scientific papers or documents in the future.
 
 \newpage
 \section{Professional Issues}
@@ -2425,7 +2425,7 @@ After reviewing the BSC code of conduct, neither myself nor the software that I 
 
 \newpage
 \section{Bibliography}
-\begin{thebibliography}{12}
+\begin{thebibliography}{13}
 
 \bibitem{kozarng}
   John R. Koza, 
@@ -2507,8 +2507,20 @@ David Jackson,
   Haldir[RET],
   \emph{How to crack a Linear Congruential Generator}.
   Reverse Engineering Team,
-  2004
+  2004.
 
+\bibitem{quant}
+T. Symul, S. M. Assad, P. K. Lam,
+\emph{Real time demonstration of high bitrate quantum random number generation
+with coherent laser light}
+Centre for Quantum Computation and Communication Technology, Department of Quantum Science,
+Australian National University.
+2011.
+
+\bibitem{randomorg}
+ Haahr, M. 
+\emph{RANDOM.ORG - True Random Number Service. [online] Random.org.} 
+Available at: http://www.random.org [Accessed 28 Apr. 2014]
 
 \end{thebibliography}
 \newpage
@@ -2530,11 +2542,15 @@ Provided with this report is a CD containing; all of the Microsoft Windows Visua
 .3 interim-report.pdf.
 .3 presentation.pdf.
 .3 specification.pdf.
-.2 Software \DTcomment{MS Visual Studio projects and code}.
+.2 Code \DTcomment{MS Visual Studio projects and code}.
 .3 Data Proc.
 .3 RNG-GP-Koza.
 .3 RNG-SNGP.
 .3 TRNG\_C.
+.2 Software \DTcomment{Standalone executable applications}.
+.3 RNG-GP-Koza.exe.
+.3 RNG-SNGP.exe.
+.3 TRNG\_C.exe.
 .2 Test Data \DTcomment{Test data gathered and used in the evaluation stage}.
 .3 10-SNGP-25000.
 .3 Demonstration.
@@ -2548,11 +2564,23 @@ Provided with this report is a CD containing; all of the Microsoft Windows Visua
 }
 
 
-This appendix is also available at the following GitHub repository;
+This appendix is also available at; https://github.com/philleonard/Random-Number-Generation-Using-Genetic-Programming 
 
-\begin{center}
-https://github.com/philleonard/Random-Number-Generation-Using-Genetic-Programming
-\end{center}
+The appendix can be viewed here or it can be cloned (downloaded) In order to clone the repository; open git bash (download it from http://git-scm.com/downloads), and move to the desired folder. Then type;
+
+\begin{lstlisting}[language=bash]
+git clone https://github.com/philleonard/Random-Number-Generation-Using-Genetic-Programming.git
+\end{lstlisting}
+
+The repository will then be cloned to your computer. 
+
+Once the appendix has been obtained (either from the CD-RW or the GitHub repository), then in order to use the standalone software, navigate to the Software folder and simply run an implementation by opening the application. In this folder there is the GP, SNGP and TRNG/C implementations available. However in ordert o change parameters and change and view the code, then you will need to have a copy of Microsoft Visual Studio installed. The software was written on the 2012 platform. Simply start Microsoft Visual Studios and navigate to the Code directory in the repository/CD. The MS Visual Studio projects can be found here for all three implementations plus an extra program used for post-processing some data used in this report. To open any of them, simply open the Microsoft Visual Studios solution file in any of the directories.
+
+In order to just view the code outside of MS Visual studios, open the folder corresponding to the solution name. In there, for each solution there will be a single C++ (written in C) file, containing all of the code written for each implementation.
+
+As far as the documents go, the pdfs can be found in the ``Project Documents" folder in the root of the repository/CD and the \LaTeX\ documents can be found in the ``LaTeX Documents" folder. 
+
+The data collected for all of the evaluation in this project can be found in the ``Test Data" folder in the root of the repository/CD. All data is represented in log files and Is in a Comma Separated Values format.
 %To be completed.
 %Appendices are meant to contain detailed material, required for completeness, but which are too detailed to include in the main body of the text. Typically they should contain code listings, details of test data, screen shots of sample runs, a user guide, full design diagrams, instructions for unpacking and mounting any software included with the dissertation and similar material. A disc or CD-ROM containing the project archive material (including source codes, pictures used, and the dissertation document) should be submitted with the project report. Instructions on how to run the software from the disc/CD-ROM should be provided. If your system is available on-line, you should provide instructions of how to access the system via the internet.
 \end{document}
