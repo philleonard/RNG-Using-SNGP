@@ -1,9 +1,11 @@
-Random Number Generation Using Genetic Programming
+RNG Using GP
 ==================================================
 
 Final Year Project Appendix. Including code, documents (dissertation, reports, presentations etc..), LaTeX files and test data.
 
 A comparison of GP and SNGP for evolving RNGs, and a comparison of RNGs produced through evolutionary means against other common RNGs. 
+
+[Dissertation](/Project%20Documents/dissertation.pdf?raw=true)
 ##Abstract
 
 This is the final report for the project; `Random Number Generation Using Genetic Programming' by Philip Leonard, supervised by Dr David Jackson (primary supervisor) and Professor Paul Dunne (secondary supervisor). This document covers all aspects of the project from the introduction and background, to the design implementation and analysis of the project in order to give the reader an understanding of how I implemented the project and what things I found when evaluating the project.
